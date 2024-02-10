@@ -34,7 +34,7 @@ const LogoBox = styled.div`
     top: 40px;
     z-index: 99;
     cursor: pointer;
-    width: 100px;
+    width: 130px;
     background: #83271c;
     font-weight: bold;
     display: flex;
@@ -160,7 +160,7 @@ export default function Home(){
     return <BgBox>
         <LogoBox onClick={()=>toGo("/")}>
             {/*<img src={LogoImg} alt=""/>*/}
-            LOONG
+            AILOONG
         </LogoBox>
         <InnerBox>
             <img src={BgImg} alt="" className="bg"/>

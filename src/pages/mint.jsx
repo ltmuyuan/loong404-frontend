@@ -11,11 +11,14 @@ import {useWeb3ModalProvider} from "@web3modal/ethers/react";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import abi from '../assets/abi/loong-abi.json'
-import {BrowserProvider, Contract} from "ethers";
+import {BrowserProvider, Contract, ethers} from "ethers";
 import {chain, contractAddress} from "../common/config.js";
 import Loading from "../components/loading.jsx";
 import {useSelector} from "react-redux";
 import {notification} from 'antd';
+import store from "../store/index.js";
+import {saveLoading} from "../store/reducer.js";
+import BigNumber from "bignumber.js";
 
 const Layout = styled.div`
 
@@ -185,6 +188,7 @@ const RhtInput = styled.div`
         flex-grow: 1;
         text-align: center;
         width: 70px;
+        color:rgba(255,255,255,0.8);
     }
 `
 
@@ -206,7 +210,7 @@ const MintBtn = styled.button`
 const LogoBox = styled.div`
 
     cursor: pointer;
-    width: 100px;
+    width: 130px;
     background: #83271c;
     font-weight: bold;
     display: flex;
@@ -229,9 +233,15 @@ export default function Mint(){
     const [count, setCount] = useState(1)
     const navigate = useNavigate()
     const [mintType, setMintType] = useState(null)
+    const [minted, setMinted] = useState('')
+    const [total, setTotal] = useState('')
+    const [price, setPrice] = useState('')
+    const [limitMemberMint, setLimitMemberMint] = useState('')
+    const [limitMint, setLimitMint] = useState('')
     const { open } = useWeb3Modal();
     const loading = useSelector(store => store.loading);
     const [api, contextHolder] = notification.useNotification();
+    const [pro,setPro] = useState(0);
 
     useEffect(() =>{
         if (!address || !walletProvider || chainId !== chain.chainId) {
@@ -243,12 +253,43 @@ export default function Mint(){
             try {
                 const signer = await privider.getSigner(address);
                 const contract = new Contract(contractAddress, abi, signer)
-                const res = await contract.checkFreeMint(address)
-                setMintType(res ? MINT_TYPE_FREE : MINT_TYPE_NORMAL);
-                console.log(res)
+
+                const arr = [
+                    contract.checkFreeMint(address),
+                    contract.minted(),
+                    contract.totalSupply(),
+                    contract.price(),
+                    contract.limitMemberMint(),
+                    contract.limitMint(address),
+                ]
+                const rests = await Promise.all(arr)
+                setMintType(rests[0] ? MINT_TYPE_FREE : MINT_TYPE_NORMAL);
+                let mintedB = ethers.formatEther(rests[1]);
+                setMinted(mintedB);
+                let totalB = ethers.formatEther(rests[2])
+                setTotal(totalB);
+                setPrice( ethers.formatEther(rests[3]));
+                setLimitMemberMint(rests[4])
+                setLimitMint(rests[5])
+
+                let totalBN = new BigNumber(totalB)
+                let MintedBN = new BigNumber(mintedB)
+                const result = MintedBN.dividedBy(totalBN);
+
+                const percentage = result.times(100).toString();
+                const per = Number(percentage).toFixed(2)
+                setPro(per)
+
+
+                console.log(rests)
             } catch (e) {
                 console.error(e)
                 setMintType(null);
+                setMinted('')
+                setTotal('')
+                setPrice('')
+                setLimitMemberMint('')
+                setLimitMint('')
             }
         })()
     }, [address, walletProvider, chainId])
@@ -281,18 +322,44 @@ export default function Mint(){
         open()
     }
 
-    const normalMint = () => {
 
-
-    }
-
-    const test =() =>{
+    const test =() => {
         api.success({
             message: 'Please install wallet',
         });
     }
+    const normalMint = async () => {
+        store.dispatch(saveLoading(true))
+        const privider = new BrowserProvider(walletProvider);
+        try {
+            const signer = await privider.getSigner(address);
+            const contract = new Contract(contractAddress, abi, signer)
+            const res = await contract.mint(count)
 
-    const freeMint = () => {
+            console.log(res)
+        } catch (e) {
+            console.error(e)
+        }
+        store.dispatch(saveLoading(false))
+    }
+
+    const freeMint = async () => {
+        store.dispatch(saveLoading(true))
+        const provider = new BrowserProvider(walletProvider);
+        try {
+            const signer = await provider.getSigner(address);
+            const contract = new Contract(contractAddress, abi, signer)
+            const res = await contract.freemint()
+            console.log(res)
+        } catch (e) {
+            console.error(e)
+        }
+        store.dispatch(saveLoading(false))
+    }
+
+     const  addCommasToNumber =(number) =>{
+        let numbB = Number(number)
+         return numbB?.toLocaleString('en-US');
 
     }
 
@@ -307,28 +374,28 @@ export default function Mint(){
             <FirstLine>
                 <LogoBox onClick={()=>toGo("/")}>
                     {/*<img src={LogoImg} alt=""/>*/}
-                    LOONG
+                    AILOONG
                 </LogoBox>
                 {/*<img src={Logo} alt="" onClick={()=>toGo("/")}/>*/}
                 <ConnectButton />
             </FirstLine>
             <BtmBox>
                 <LftBox>
-                    <TitleBox>YUME</TitleBox>
+                    <TitleBox>AILOONG</TitleBox>
                     <ProBox width="40">
                         <div className="top">
                             <div>TOTAL MINTED</div>
-                            <div>27.00% 1800/6666</div>
+                            <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
                         </div>
                         <div className="proOuter">
                             <div className="proInner" />
                         </div>
                     </ProBox>
                     <ArticleBox>
-                        <p>Discover the World of YUME: A Samurai Saga in the Digital Realm</p>
-                        <p> Step into the realm of YUME, an extraordinary ERC404 NFT project where the legacy of samurai warriors is reborn within the ethers of the blockchain. This collection presents 10,000 uniquely crafted samurai NFTs, each bearing the soul of the ancient warrior class, now reimagined for the digital age. </p>
-                        <p> In YUME, tradition meets innovation. As the vanguards of the ERC404 standard, these NFTs are not merely artistic renderings but are also imbued with the versatility of being both tradeable tokens and collectible art pieces. YUME transcends the conventional, allowing each samurai to live in two worlds: the fluidity of DEXs and the curated halls of NFT marketplaces. </p>
-                        <p>Embrace the spirit of the samurai, claim your YUME, and make your mark in the new era of digital collectibles.</p>
+                        <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
+                        <p>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</p>
+                        <p>In AILoong tradition meets innovation. As the vanguards of the ERC404 standard, these NFTs are not merely artistic renderings but are also imbued with the versatility of being both tradeable tokens and collectible gnosis AI art pieces. AILoong transcends the conventional, allowing each loong to live in two worlds: the fluidity of DEXs and the curated halls of NFT marketplaces.</p>
+                        <p>Embrace the spirit of the mysterious gnosis AI, claim your AILoong, and make your mark in the new era of AI digital collectibles.</p>
                     </ArticleBox>
                     <SocialBox>
                         <img src={GlobalImg} alt=""/>
@@ -336,7 +403,7 @@ export default function Mint(){
                     </SocialBox>
                     <PublicBox>
                         <div>public</div>
-                        <div>5 Per Wallet • 0.03 ETH</div>
+                        <div>10 per wallet * {price} ETH</div>
                     </PublicBox>
                 </LftBox>
                 <RhtBox>
@@ -345,7 +412,7 @@ export default function Mint(){
                     </PhotoBox>
                     <RhtBtmBox>
                         <FlexLine>
-                            <div>Price: 0.03 ETH</div>
+                            <div>Price: {price} ETH</div>
                             <RhtInput>
                                 <img src={LftImg} alt="" onClick={()=>step('plus')}/>
                                 <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
