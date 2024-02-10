@@ -181,25 +181,25 @@ export default function Home(){
         {/*</Leftbox>*/}
         <RhtBox>
             {/*<img src={RhtImg} className="rht" alt=""/>*/}
-            <RhtInner>
-                <div className="lft">
-                    <div className="top">
-                        <span>ERC404 AI Gnosis</span><span className="center"> 1100 Loong</span>
-                    </div>
-                    <div className="com">Coming  Soon</div>
-                </div>
-
-
-            </RhtInner>
             {/*<RhtInner>*/}
             {/*    <div className="lft">*/}
-            {/*        <div className="top">ERC404 AI Gnosis</div>*/}
-            {/*        <div className="price"><span className="center"> 1100 Loong</span></div>*/}
+            {/*        <div className="top">*/}
+            {/*            <span>ERC404 AI Gnosis</span><span className="center"> 1100 Loong</span>*/}
+            {/*        </div>*/}
+            {/*        <div className="com">Coming  Soon</div>*/}
             {/*    </div>*/}
-            {/*    <BtnRht onClick={()=>toGo("/mint")}>*/}
-            {/*        Mint Now*/}
-            {/*    </BtnRht>*/}
+
+
             {/*</RhtInner>*/}
+            <RhtInner>
+                <div className="lft">
+                    <div className="top">ERC404 AI Gnosis</div>
+                    <div className="price"><span className="center"> 1100 Loong</span></div>
+                </div>
+                <BtnRht onClick={()=>toGo("/mint")}>
+                    Mint Now
+                </BtnRht>
+            </RhtInner>
         </RhtBox>
     </BgBox>
 }
