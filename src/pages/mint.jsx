@@ -8,7 +8,7 @@ import BgImg from "../assets/demo/bg.png";
 import ConnectButton from "../components/ConnectButton.jsx";
 import {useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
 import {useWeb3ModalProvider} from "@web3modal/ethers/react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import abi from '../assets/abi/loong-abi.json'
 import {BrowserProvider, Contract, ethers} from "ethers";
@@ -96,6 +96,7 @@ const ProBox = styled.div`
         height: 16px;
         border-radius: 8px;
         margin-top: 20px;
+        overflow: hidden;
     }
     .proInner{
         height: 100%;
@@ -131,7 +132,12 @@ const PhotoBox = styled.div`
 const ArticleBox = styled.div`
     margin-top: 40px;
     font-size: 16px;
-    p{
+    p,span{
+        margin-bottom: 30px;
+        line-height: 1.4;
+        opacity: 0.8;
+    }
+    div{
         margin-bottom: 30px;
         line-height: 1.4;
     }
@@ -226,6 +232,7 @@ const LogoBox = styled.div`
 const MAX_COUNT = 5;
 const MINT_TYPE_FREE = '2'
 const MINT_TYPE_NORMAL = '1'
+const  Unit = 600000;
 
 export default function Mint(){
     const { address, chainId,  isConnected } = useWeb3ModalAccount()
@@ -269,7 +276,9 @@ export default function Mint(){
                 let mintedB = rests[1].toString();
                 setMinted(mintedB);
                 let totalB = ethers.formatEther(rests[2])
-                setTotal(totalB);
+                let totalAfter = new BigNumber(totalB).div(Unit);
+                console.log(totalAfter)
+                setTotal(totalAfter.toString());
                 setPrice( ethers.formatEther(rests[3]));
                 setLimitMemberMint(rests[4].toString())
                 setLimitMint(rests[5].toString())
@@ -279,9 +288,9 @@ export default function Mint(){
                 setNormalMintRemain(remain)
                 setCount(remain)
 
-                let totalBN = new BigNumber(totalB)
+
                 let MintedBN = new BigNumber(mintedB)
-                const result = MintedBN.dividedBy(totalBN);
+                const result = MintedBN.dividedBy(totalAfter);
                 const percentage = result.times(100).toString();
                 const per = Number(percentage).toFixed(2)
                 setPro(per)
@@ -422,13 +431,18 @@ export default function Mint(){
                     </ProBox>
                     <ArticleBox>
                         <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
-                        <p>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</p>
+                        <div><strong>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. </strong><span>This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</span></div>
                         <p>In AILoong tradition meets innovation. As the vanguards of the ERC404 standard, these NFTs are not merely artistic renderings but are also imbued with the versatility of being both tradeable tokens and collectible gnosis AI art pieces. AILoong transcends the conventional, allowing each loong to live in two worlds: the fluidity of DEXs and the curated halls of NFT marketplaces.</p>
                         <p>Embrace the spirit of the mysterious gnosis AI, claim your AILoong, and make your mark in the new era of AI digital collectibles.</p>
                     </ArticleBox>
                     <SocialBox>
-                        <img src={GlobalImg} alt=""/>
-                        <img src={TwitterImg} alt=""/>
+                        <Link to="/">
+                            <img src={GlobalImg} alt=""/>
+                        </Link>
+                        <Link to="https://twitter.com/AIloongglobal" target="_blank" >
+                            <img src={TwitterImg} alt=""/>
+                        </Link>
+
                     </SocialBox>
                     <PublicBox>
                         <div>public</div>
