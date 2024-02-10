@@ -18,7 +18,6 @@ const BgBox = styled.div`
 
 const InnerBox = styled.div`
     display: flex;
-    background: #f00;
     align-content: center;
     justify-content: center;
     position: relative;
@@ -42,14 +41,11 @@ const Leftbox = styled.div`
     height: 140px;
     box-shadow: 0 0 4px #999;
     border-radius: 15px;
-    left: 35px;
+    left: 3vw;
     bottom: 25px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-
-
-
     span{
         color: rgba(0,0,0,0.85);
         font-size: 25px;
@@ -60,6 +56,9 @@ const Leftbox = styled.div`
         left: 0;
         bottom: 0;
     }
+    @media (max-width: 1100px) {
+        display: none;
+    }
 `
 
 const RhtBox = styled.div`
@@ -68,7 +67,7 @@ const RhtBox = styled.div`
     height: 140px;
     background: #b14044;
     box-shadow: 0 0 4px #999;
-    right: 0;
+    right: 5vw;
     border-radius: 15px;
     bottom: 25px;
     display: flex;
@@ -110,28 +109,29 @@ const BtnRht = styled.div`
 
 export default function Home(){
     return <BgBox>
+        <LogoBox>
+            <img src={LogoImg} alt=""/>
+        </LogoBox>
         <InnerBox>
             <img src={BgImg} alt="" className="bg"/>
-            <LogoBox>
-                <img src={LogoImg} alt=""/>
-            </LogoBox>
-            <Leftbox>
-                <img src={LftImg} alt="" className="lft" />
-                <span>Mirai</span>
-            </Leftbox>
-            <RhtBox>
-                <img src={RhtImg} className="rht" alt=""/>
-                <RhtInner>
-                    <div className="lft">
-                        <div className="top">ERC404 PFP</div>
-                        <div className="price">10,000 YUME</div>
-                    </div>
-                    <BtnRht>
-                        Mint Now
-                    </BtnRht>
-                </RhtInner>
-            </RhtBox>
-        </InnerBox>
 
+
+        </InnerBox>
+        <Leftbox>
+            <img src={LftImg} alt="" className="lft" />
+            <span>Mirai</span>
+        </Leftbox>
+        <RhtBox>
+            <img src={RhtImg} className="rht" alt=""/>
+            <RhtInner>
+                <div className="lft">
+                    <div className="top">ERC404 PFP</div>
+                    <div className="price">10,000 YUME</div>
+                </div>
+                <BtnRht>
+                    Mint Now
+                </BtnRht>
+            </RhtInner>
+        </RhtBox>
     </BgBox>
 }
