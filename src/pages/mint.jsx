@@ -225,7 +225,8 @@ export default function Mint(){
         <MainBox>
             <FirstLine>
                 <img src={Logo} alt="" onClick={()=>toGo("/")}/>
-                <ConnectButton />
+                {/*<ConnectButton />*/}
+                <ConnectBtn>Connect wallet</ConnectBtn>
             </FirstLine>
             <BtmBox>
                 <LftBox>
