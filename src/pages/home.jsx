@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BgImg from "../assets/demo/home-bg.jpg";
+import BgImg from "../assets/home-bg.jpg";
 import LogoImg from "../assets/demo/logo.svg";
 import LftImg from "../assets/demo/left-bottom.png";
 import RhtImg from "../assets/demo/right-bottom.png";
@@ -10,7 +10,7 @@ import {useNavigate} from "react-router-dom";
 const BgBox = styled.div`
     width: 100%;
     min-height: 100vh;
-    background: #eeeae7;
+    background: #fdfaf1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,7 +22,7 @@ const InnerBox = styled.div`
     justify-content: center;
     position: relative;
     margin: 0 auto;
-    max-width: 1800px;
+    max-width: 1600px;
     .bg{
         width: 100%;
     }
@@ -34,6 +34,16 @@ const LogoBox = styled.div`
     top: 40px;
     z-index: 99;
     cursor: pointer;
+    width: 100px;
+    background: #83271c;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    height: 40px;
+    font-size: 23px;
+    border-radius: 10px;
 `
 
 const Leftbox = styled.div`
@@ -65,25 +75,33 @@ const Leftbox = styled.div`
 
 const RhtBox = styled.div`
     position: absolute;
-    width: 660px;
-    height: 140px;
-    background: #b14044;
+    //width: 660px;
+    padding:20px;
+
+    background: #83271c;
     box-shadow: 0 0 4px #999;
-    right: 5vw;
+    right:0;
     border-radius: 15px;
-    bottom: 25px;
+    top: 25vw;
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    box-sizing: border-box;
     .rht{
         position: absolute;
         left: 0;
         bottom: 0;
     }
+    @media (max-width: 1440px) {
+        top:28vw;
+    }
     @media (max-width: 1100px) {
-        width: 95vw;
-        height: 26vw;
-        right: 2.5vw;
+        height: 20vw;
+        width:80vw;
+        bottom:20vw;
+        top:auto;
+        justify-content: center;
+        right: 10vw;
         .rht{
             width: 38vw;
         }
@@ -94,6 +112,7 @@ const RhtInner = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 30px;
     .lft{
        font-size: 25px; 
     }
@@ -110,10 +129,9 @@ const RhtInner = styled.div`
     }
 `
 const BtnRht = styled.div`
-    width: 170px;
-    height: 80px;
+    width: 120px;
+    height:45px;
     text-transform: uppercase;
-    margin: 0 35px;
     display: flex;
     align-items: center;
     background: #fff;
@@ -141,19 +159,20 @@ export default function Home(){
 
     return <BgBox>
         <LogoBox onClick={()=>toGo("/")}>
-            <img src={LogoImg} alt=""/>
+            {/*<img src={LogoImg} alt=""/>*/}
+            LOONG
         </LogoBox>
         <InnerBox>
             <img src={BgImg} alt="" className="bg"/>
 
 
         </InnerBox>
-        <Leftbox>
-            <img src={LftImg} alt="" className="lft" />
-            <span>Mirai</span>
-        </Leftbox>
+        {/*<Leftbox>*/}
+        {/*    <img src={LftImg} alt="" className="lft" />*/}
+        {/*    <span>Mirai</span>*/}
+        {/*</Leftbox>*/}
         <RhtBox>
-            <img src={RhtImg} className="rht" alt=""/>
+            {/*<img src={RhtImg} className="rht" alt=""/>*/}
             <RhtInner>
                 <div className="lft">
                     <div className="top">ERC404 PFP</div>

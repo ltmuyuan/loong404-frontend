@@ -4,15 +4,16 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
 
   html {
-      background: #eeeae7;
+      background: #fdfaf1;
       min-height: 100%;
       width: 100%;
       font-family: Helvetica Neue,Arial,Microsoft YaHei,sans-serif;
+      color:#fffc;
   }
   
   
   *{
-      color:#fffc;
+
       padding: 0;
       margin: 0;
   }

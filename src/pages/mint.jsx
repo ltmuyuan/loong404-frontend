@@ -1,15 +1,21 @@
 import styled from "styled-components";
-import Logo from "../assets/demo/mintLogo.png";
-import DemoImg from "../assets/demo/demo2.png";
+import DemoImg from "../assets/demo.jpg";
 import TwitterImg from "../assets/demo/twitter.png";
 import GlobalImg from "../assets/demo/global.png";
 import LftImg from "../assets/demo/minus.png";
 import RhtImg from "../assets/demo/plus.png";
 import BgImg from "../assets/demo/bg.png";
 import ConnectButton from "../components/ConnectButton.jsx";
-import { useWeb3ModalAccount } from '@web3modal/ethers/react'
+import {useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
 import {useWeb3ModalProvider} from "@web3modal/ethers/react";
 import {useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import abi from '../assets/abi/loong-abi.json'
+import {BrowserProvider, Contract} from "ethers";
+import {chain, contractAddress} from "../common/config.js";
+import Loading from "../components/loading.jsx";
+import {useSelector} from "react-redux";
+import {notification} from 'antd';
 
 const Layout = styled.div`
 
@@ -41,20 +47,6 @@ const FirstLine = styled.div`
     @media (max-width: 1100px) {
           height: 80px;
     }
-`
-
-const ConnectBtn = styled.button`
-    background: #ebe0cc;
-    color: #0a0a0b;
-    border: 0;
-    width: 135px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 16px;
-    border-radius: 8px;
 `
 
 const BtmBox = styled.div`
@@ -185,6 +177,7 @@ const RhtInput = styled.div`
         height: 25px;
         border-radius: 25px;
         flex-shrink: 0;
+        cursor: pointer;
     }
     input{
         background: transparent;
@@ -210,23 +203,114 @@ const MintBtn = styled.button`
     font-weight: 600;
 `
 
-export default function Mint(){
-    const { address, chainId, isConnected } = useWeb3ModalAccount()
-    const { walletProvider } = useWeb3ModalProvider()
-    console.log(walletProvider, address)
+const LogoBox = styled.div`
 
+    cursor: pointer;
+    width: 100px;
+    background: #83271c;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    height: 40px;
+    font-size: 23px;
+    border-radius: 10px;
+`
+
+
+const MAX_COUNT = 5;
+const MINT_TYPE_FREE = '2'
+const MINT_TYPE_NORMAL = '1'
+
+export default function Mint(){
+    const { address, chainId,  isConnected } = useWeb3ModalAccount()
+    const { walletProvider } = useWeb3ModalProvider()
+    const [count, setCount] = useState(1)
     const navigate = useNavigate()
+    const [mintType, setMintType] = useState(null)
+    const { open } = useWeb3Modal();
+    const loading = useSelector(store => store.loading);
+    const [api, contextHolder] = notification.useNotification();
+
+    useEffect(() =>{
+        if (!address || !walletProvider || chainId !== chain.chainId) {
+            setMintType(null)
+            return;
+        }
+        (async () => {
+            const privider = new BrowserProvider(walletProvider);
+            try {
+                const signer = await privider.getSigner(address);
+                const contract = new Contract(contractAddress, abi, signer)
+                const res = await contract.checkFreeMint(address)
+                setMintType(res ? MINT_TYPE_FREE : MINT_TYPE_NORMAL);
+                console.log(res)
+            } catch (e) {
+                console.error(e)
+                setMintType(null);
+            }
+        })()
+    }, [address, walletProvider, chainId])
 
     const toGo = (url) =>{
         navigate(url)
     }
 
+    const onCountChanged = (e) => {
+        let v = e.target.value;
+        if (Number(v) <= 0) {
+            setCount(1)
+        } else if (Number(v) > MAX_COUNT) {
+            setCount(MAX_COUNT)
+        } else {
+            setCount(v)
+        }
+    }
+
+    const step = (type) => {
+        if (type === 'add')  {
+            Number(count) < MAX_COUNT ? setCount(count+1) : setCount(MAX_COUNT)
+        }
+        if (type === 'plus') {
+            Number(count) > 1 ? setCount(count-1) : setCount(1)
+        }
+    }
+
+    const connect = () => {
+        open()
+    }
+
+    const normalMint = () => {
+
+
+    }
+
+    const test =() =>{
+        api.success({
+            message: 'Please install wallet',
+        });
+    }
+
+    const freeMint = () => {
+
+    }
+
     return <Layout>
+        {
+            loading && <Loading />
+        }
+
+
+        {contextHolder}
         <MainBox>
             <FirstLine>
-                <img src={Logo} alt="" onClick={()=>toGo("/")}/>
-                {/*<ConnectButton />*/}
-                <ConnectBtn>Connect wallet</ConnectBtn>
+                <LogoBox onClick={()=>toGo("/")}>
+                    {/*<img src={LogoImg} alt=""/>*/}
+                    LOONG
+                </LogoBox>
+                {/*<img src={Logo} alt="" onClick={()=>toGo("/")}/>*/}
+                <ConnectButton />
             </FirstLine>
             <BtmBox>
                 <LftBox>
@@ -263,13 +347,17 @@ export default function Mint(){
                         <FlexLine>
                             <div>Price: 0.03 ETH</div>
                             <RhtInput>
-                                <img src={LftImg} alt=""/>
-                                <input type="number" min={0} step={1} value={1} />
-                                <img src={RhtImg} alt=""/>
+                                <img src={LftImg} alt="" onClick={()=>step('plus')}/>
+                                <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
+                                <img src={RhtImg} alt=""  onClick={()=>step('add')}/>
                             </RhtInput>
                         </FlexLine>
                     </RhtBtmBox>
-                    <MintBtn>Mint</MintBtn>
+
+                    {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint</MintBtn>}
+                    {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
+                    {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
+
                 </RhtBox>
             </BtmBox>
         </MainBox>

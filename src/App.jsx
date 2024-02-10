@@ -5,20 +5,12 @@ import {PersistGate} from "redux-persist/integration/react";
 import store,{persistor} from "./store";
 import { Provider } from "react-redux";
 import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
+import {ConfigProvider } from 'antd';
+import {chain} from "./common/config.js";
 
 // 1. Get projectId at https://cloud.walletconnect.com
 const projectId = '00a2aff76270ce36b305c8c069d5c080'
 
-// 2. Set chains
-const mainnet = {
-    chainId: 1,
-    name: 'Ethereum',
-    currency: 'ETH',
-    explorerUrl: 'https://etherscan.io',
-    rpcUrl: 'https://cloudflare-eth.com'
-}
-
-// 3. Create modal
 const metadata = {
     name: 'My Website',
     description: 'My Website description',
@@ -28,7 +20,7 @@ const metadata = {
 
 createWeb3Modal({
     ethersConfig: defaultConfig({ metadata }),
-    chains: [mainnet],
+    chains: [chain],
     projectId,
     enableAnalytics: false,
     themeVariables: {
@@ -41,6 +33,17 @@ createWeb3Modal({
 function App() {
   return (
     <>
+        <ConfigProvider
+            theme={{
+                token: {
+                    colorText:"#fff",
+                    colorIcon:"rgba(255,255,255,0.8)",
+                    colorError:"#ff4d4f",
+                    colorSuccess:"#52c41a",
+                    colorBgElevated: '#303030',
+                },
+            }}
+        >
         <PersistGate loading={null} persistor={persistor} >
             <Provider store={store}>
                 <Router>
@@ -49,6 +52,7 @@ function App() {
                 <GlobalStyle />
             </Provider>
         </PersistGate>
+        </ConfigProvider>
     </>
   )
 }
