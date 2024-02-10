@@ -230,18 +230,20 @@ const MINT_TYPE_NORMAL = '1'
 export default function Mint(){
     const { address, chainId,  isConnected } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
-    const [count, setCount] = useState(1)
+    const [count, setCount] = useState(0)
     const navigate = useNavigate()
     const [mintType, setMintType] = useState(null)
     const [minted, setMinted] = useState('')
     const [total, setTotal] = useState('')
     const [price, setPrice] = useState('')
-    const [limitMemberMint, setLimitMemberMint] = useState('')
-    const [limitMint, setLimitMint] = useState('')
+    const [limitMemberMint, setLimitMemberMint] = useState('0')
+    const [limitMint, setLimitMint] = useState('0')
+    const [normalMintRemain, setNormalMintRemain] = useState(0)
     const { open } = useWeb3Modal();
     const loading = useSelector(store => store.loading);
     const [api, contextHolder] = notification.useNotification();
     const [pro,setPro] = useState(0);
+    const [refresh, setRefresh] = useState(0)
 
     useEffect(() =>{
         if (!address || !walletProvider || chainId !== chain.chainId) {
@@ -259,59 +261,74 @@ export default function Mint(){
                     contract.minted(),
                     contract.totalSupply(),
                     contract.price(),
-                    contract.limitMemberMint(),
+                    contract.limitUserMintNum(),
                     contract.limitMint(address),
                 ]
                 const rests = await Promise.all(arr)
                 setMintType(rests[0] ? MINT_TYPE_FREE : MINT_TYPE_NORMAL);
-                let mintedB = ethers.formatEther(rests[1]);
+                let mintedB = rests[1].toString();
                 setMinted(mintedB);
                 let totalB = ethers.formatEther(rests[2])
                 setTotal(totalB);
                 setPrice( ethers.formatEther(rests[3]));
-                setLimitMemberMint(rests[4])
-                setLimitMint(rests[5])
+                setLimitMemberMint(rests[4].toString())
+                setLimitMint(rests[5].toString())
+
+                let remain = Number(rests[4].toString()) - Number(rests[5].toString())
+                remain = remain < 0 ? 0 : remain;
+                setNormalMintRemain(remain)
+                setCount(remain)
 
                 let totalBN = new BigNumber(totalB)
                 let MintedBN = new BigNumber(mintedB)
                 const result = MintedBN.dividedBy(totalBN);
-
                 const percentage = result.times(100).toString();
                 const per = Number(percentage).toFixed(2)
                 setPro(per)
 
+                console.log(rests, 'normalMintRemain=' + normalMintRemain)
 
-                console.log(rests)
             } catch (e) {
                 console.error(e)
                 setMintType(null);
                 setMinted('')
                 setTotal('')
                 setPrice('')
-                setLimitMemberMint('')
-                setLimitMint('')
+                setLimitMemberMint('0')
+                setLimitMint('0')
+                setNormalMintRemain(0)
+                setCount(0)
             }
         })()
-    }, [address, walletProvider, chainId])
+    }, [address, walletProvider, chainId, refresh])
 
     const toGo = (url) =>{
         navigate(url)
     }
 
     const onCountChanged = (e) => {
+        if (Number(normalMintRemain) <=0) {
+            setCount(0)
+            return;
+        }
         let v = e.target.value;
         if (Number(v) <= 0) {
             setCount(1)
-        } else if (Number(v) > MAX_COUNT) {
-            setCount(MAX_COUNT)
+        } else if (Number(v) > Number(normalMintRemain)) {
+            setCount(Number(normalMintRemain))
         } else {
             setCount(v)
         }
     }
 
     const step = (type) => {
+        // console.log("step", count, limitMemberMint)
+        if (Number(normalMintRemain) <=0) {
+            setCount(0)
+            return;
+        }
         if (type === 'add')  {
-            Number(count) < MAX_COUNT ? setCount(count+1) : setCount(MAX_COUNT)
+            Number(count) < Number(normalMintRemain) ? setCount(count+1) : setCount(Number(normalMintRemain))
         }
         if (type === 'plus') {
             Number(count) > 1 ? setCount(count-1) : setCount(1)
@@ -322,37 +339,49 @@ export default function Mint(){
         open()
     }
 
-
-    const test =() => {
-        api.success({
-            message: 'Please install wallet',
-        });
-    }
     const normalMint = async () => {
+        // if (Number(count) > 0) {
+        //     api.error({
+        //         message: 'You have exceeded the mint limit',
+        //     });
+        //     return;
+        // }
         store.dispatch(saveLoading(true))
         const privider = new BrowserProvider(walletProvider);
         try {
             const signer = await privider.getSigner(address);
             const contract = new Contract(contractAddress, abi, signer)
             const res = await contract.mint(count)
-
+            await res.wait()
             console.log(res)
+            setRefresh(Date.now())
+            api.success({
+                message: 'Mint Successfully',
+            });
         } catch (e) {
             console.error(e)
+            api.error({message: e.toString()})
         }
         store.dispatch(saveLoading(false))
     }
 
     const freeMint = async () => {
+
         store.dispatch(saveLoading(true))
         const provider = new BrowserProvider(walletProvider);
         try {
             const signer = await provider.getSigner(address);
             const contract = new Contract(contractAddress, abi, signer)
             const res = await contract.freemint()
+            await res.wait()
             console.log(res)
+            setRefresh(Date.now())
+            api.success({
+                message: 'Mint Successfully',
+            });
         } catch (e) {
             console.error(e)
+            api.error({message: e.toString()})
         }
         store.dispatch(saveLoading(false))
     }
@@ -382,7 +411,7 @@ export default function Mint(){
             <BtmBox>
                 <LftBox>
                     <TitleBox>AILOONG</TitleBox>
-                    <ProBox width="40">
+                    <ProBox width={pro}>
                         <div className="top">
                             <div>TOTAL MINTED</div>
                             <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
@@ -403,14 +432,14 @@ export default function Mint(){
                     </SocialBox>
                     <PublicBox>
                         <div>public</div>
-                        <div>10 per wallet * {price} ETH</div>
+                        <div>{limitMemberMint} per wallet * {price} ETH</div>
                     </PublicBox>
                 </LftBox>
                 <RhtBox>
                     <PhotoBox>
                         <img src={DemoImg} alt=""/>
                     </PhotoBox>
-                    <RhtBtmBox>
+                    {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
                         <FlexLine>
                             <div>Price: {price} ETH</div>
                             <RhtInput>
@@ -419,7 +448,7 @@ export default function Mint(){
                                 <img src={RhtImg} alt=""  onClick={()=>step('add')}/>
                             </RhtInput>
                         </FlexLine>
-                    </RhtBtmBox>
+                    </RhtBtmBox>}
 
                     {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint</MintBtn>}
                     {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}

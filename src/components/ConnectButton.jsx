@@ -1,7 +1,7 @@
 import {useDisconnect, useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
 import styled from "styled-components";
 import {  Popover } from 'antd';
-import { useState} from "react";
+import {useState} from "react";
 
 
 const ConnectBtn = styled.button`
@@ -50,7 +50,7 @@ export default function ConnectButton() {
     const { address, chainId, isConnected } = useWeb3ModalAccount()
     const { disconnect } = useDisconnect()
 
-    console.log(address, chainId)
+    // console.log(address, chainId)
 
     const onClick = () => {
         open()
