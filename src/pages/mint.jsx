@@ -286,7 +286,7 @@ export default function Mint(){
                 const per = Number(percentage).toFixed(2)
                 setPro(per)
 
-                console.log(rests, 'normalMintRemain=' + normalMintRemain)
+                console.log(rests, 'normalMintRemain=' + remain)
 
             } catch (e) {
                 console.error(e)
@@ -351,7 +351,7 @@ export default function Mint(){
         try {
             const signer = await privider.getSigner(address);
             const contract = new Contract(contractAddress, abi, signer)
-            const res = await contract.mint(count)
+            const res = await contract.mint(count, {value: ethers.parseEther(BigNumber(price).times(count).toString())})
             await res.wait()
             console.log(res)
             setRefresh(Date.now())

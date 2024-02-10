@@ -16,5 +16,5 @@ const testnet = {
 }
 
 export const chain = testnet;
-export const contractAddress = '0x63B16d3bC683e7aa3F740Bb651495b68841b4B4A'
+export const contractAddress = '0x582a2124A6a47Db11B33f5ae67B12055655396d8'
 
