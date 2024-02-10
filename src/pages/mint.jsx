@@ -6,6 +6,10 @@ import GlobalImg from "../assets/demo/global.png";
 import LftImg from "../assets/demo/minus.png";
 import RhtImg from "../assets/demo/plus.png";
 import BgImg from "../assets/demo/bg.png";
+import ConnectButton from "../components/ConnectButton.jsx";
+import { useWeb3ModalAccount } from '@web3modal/ethers/react'
+import {useWeb3ModalProvider} from "@web3modal/ethers/react";
+import {useNavigate} from "react-router-dom";
 
 const Layout = styled.div`
 
@@ -18,7 +22,11 @@ const MainBox = styled.div`
     width: 100%;
     margin: 0 auto;
     padding: 0 60px;
-    max-width: 1350px;
+    max-width: 1470px;
+    box-sizing: border-box;
+    @media (max-width: 1100px) {
+        padding: 0 20px 40px;
+    }
 `
 
 const FirstLine = styled.div`
@@ -28,6 +36,10 @@ const FirstLine = styled.div`
     height: 126px;
     img{
         height: 23px;
+        cursor: pointer;
+    }
+    @media (max-width: 1100px) {
+          height: 80px;
     }
 `
 
@@ -54,6 +66,11 @@ const BtmBox = styled.div`
     align-items: flex-start;
     justify-content: space-between;
     gap:185px;
+    @media (max-width: 1100px) {
+        flex-direction: column;
+        padding: 40px 30px;
+        gap: 70px;
+    }
     
 `
 
@@ -105,6 +122,14 @@ const PhotoBox = styled.div`
         object-fit: cover;
         object-position: center;
         border-radius: 20px;
+    }
+    @media (max-width: 1100px) {
+        img{
+            width: 73vw;
+            height: 73vw;
+
+        }
+
     }
   
 `
@@ -186,11 +211,21 @@ const MintBtn = styled.button`
 `
 
 export default function Mint(){
+    const { address, chainId, isConnected } = useWeb3ModalAccount()
+    const { walletProvider } = useWeb3ModalProvider()
+    console.log(walletProvider, address)
+
+    const navigate = useNavigate()
+
+    const toGo = (url) =>{
+        navigate(url)
+    }
+
     return <Layout>
         <MainBox>
             <FirstLine>
-                <img src={Logo} alt=""/>
-                <ConnectBtn>Connect Wallet</ConnectBtn>
+                <img src={Logo} alt="" onClick={()=>toGo("/")}/>
+                <ConnectButton />
             </FirstLine>
             <BtmBox>
                 <LftBox>

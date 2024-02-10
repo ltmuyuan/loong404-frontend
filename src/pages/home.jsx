@@ -3,6 +3,9 @@ import BgImg from "../assets/demo/home-bg.jpg";
 import LogoImg from "../assets/demo/logo.svg";
 import LftImg from "../assets/demo/left-bottom.png";
 import RhtImg from "../assets/demo/right-bottom.png";
+import {useNavigate} from "react-router-dom";
+
+
 
 const BgBox = styled.div`
     width: 100%;
@@ -12,10 +15,7 @@ const BgBox = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
-
-    
 `
-
 const InnerBox = styled.div`
     display: flex;
     align-content: center;
@@ -32,6 +32,8 @@ const LogoBox = styled.div`
     position: absolute;
     left: 40px;
     top: 40px;
+    z-index: 99;
+    cursor: pointer;
 `
 
 const Leftbox = styled.div`
@@ -78,6 +80,14 @@ const RhtBox = styled.div`
         left: 0;
         bottom: 0;
     }
+    @media (max-width: 1100px) {
+        width: 95vw;
+        height: 26vw;
+        right: 2.5vw;
+        .rht{
+            width: 38vw;
+        }
+    }
 `
 
 const RhtInner = styled.div`
@@ -89,6 +99,14 @@ const RhtInner = styled.div`
     }
     .top{
         color: #e5959a;
+    }
+    @media (max-width: 1100px) {
+        .lft{
+            font-size: 13px;
+        }
+        .top{
+            margin-bottom: 10px;
+        }
     }
 `
 const BtnRht = styled.div`
@@ -103,13 +121,26 @@ const BtnRht = styled.div`
     color: #6b6c6e;
     font-size: 12px;
     border-radius: 15px;
+    cursor: pointer;
+
+    @media (max-width: 1100px) {
+        width: 26vw;
+        height: 13vw;
+       margin: 0 15px;
+    }
 `
 
 
 
 export default function Home(){
+    const navigate = useNavigate()
+
+    const toGo = (url) =>{
+        navigate(url)
+    }
+
     return <BgBox>
-        <LogoBox>
+        <LogoBox onClick={()=>toGo("/")}>
             <img src={LogoImg} alt=""/>
         </LogoBox>
         <InnerBox>
@@ -128,7 +159,7 @@ export default function Home(){
                     <div className="top">ERC404 PFP</div>
                     <div className="price">10,000 YUME</div>
                 </div>
-                <BtnRht>
+                <BtnRht onClick={()=>toGo("/mint")}>
                     Mint Now
                 </BtnRht>
             </RhtInner>
