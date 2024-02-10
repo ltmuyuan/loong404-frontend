@@ -119,6 +119,13 @@ const RhtInner = styled.div`
     }
     .top{
         color: #e5959a;
+        display: flex;
+        flex-direction: column;
+        
+    }
+    
+    .center,.com{
+        text-align: center;
     }
     @media (max-width: 1100px) {
         .lft{
@@ -177,9 +184,9 @@ export default function Home(){
             <RhtInner>
                 <div className="lft">
                     <div className="top">
-                        ERC404 AI Gnosis<br/> 1100 Loong
+                        <span>ERC404 AI Gnosis</span><span className="center"> 1100 Loong</span>
                     </div>
-                    <div>Coming  Soon</div>
+                    <div className="com">Coming  Soon</div>
                 </div>
 
 
