@@ -465,7 +465,7 @@ export default function Mint(){
                     </RhtBtmBox>}
 
 
-                    {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint</MintBtn>}
+                    {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint * {MINT_TYPE_FREE}</MintBtn>}
                     {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
                     {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
 
