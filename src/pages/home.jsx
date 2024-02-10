@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import BgImg from "../assets/home-bg.jpg";
-import LogoImg from "../assets/demo/logo.svg";
-import LftImg from "../assets/demo/left-bottom.png";
-import RhtImg from "../assets/demo/right-bottom.png";
+// import LogoImg from "../assets/demo/logo.svg";
+// import LftImg from "../assets/demo/left-bottom.png";
+// import RhtImg from "../assets/demo/right-bottom.png";
 import {useNavigate} from "react-router-dom";
 
 
@@ -193,8 +193,8 @@ export default function Home(){
             </RhtInner>
             {/*<RhtInner>*/}
             {/*    <div className="lft">*/}
-            {/*        <div className="top">ERC404 PFP</div>*/}
-            {/*        <div className="price">10,000 YUME</div>*/}
+            {/*        <div className="top">ERC404 AI Gnosis</div>*/}
+            {/*        <div className="price"><span className="center"> 1100 Loong</span></div>*/}
             {/*    </div>*/}
             {/*    <BtnRht onClick={()=>toGo("/mint")}>*/}
             {/*        Mint Now*/}
