@@ -340,12 +340,12 @@ export default function Mint(){
     }
 
     const normalMint = async () => {
-        // if (Number(count) > 0) {
-        //     api.error({
-        //         message: 'You have exceeded the mint limit',
-        //     });
-        //     return;
-        // }
+        if (Number(count) <= 0) {
+            api.error({
+                message: 'You have exceeded the mint limit',
+            });
+            return;
+        }
         store.dispatch(saveLoading(true))
         const privider = new BrowserProvider(walletProvider);
         try {
@@ -449,6 +449,7 @@ export default function Mint(){
                             </RhtInput>
                         </FlexLine>
                     </RhtBtmBox>}
+
 
                     {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint</MintBtn>}
                     {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
