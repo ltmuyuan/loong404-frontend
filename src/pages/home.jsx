@@ -113,6 +113,7 @@ const RhtInner = styled.div`
     align-items: center;
     justify-content: center;
     gap: 30px;
+    padding: 0 30px;
     .lft{
        font-size: 25px; 
     }
@@ -175,13 +176,23 @@ export default function Home(){
             {/*<img src={RhtImg} className="rht" alt=""/>*/}
             <RhtInner>
                 <div className="lft">
-                    <div className="top">ERC404 PFP</div>
-                    <div className="price">10,000 YUME</div>
+                    <div className="top">
+                        ERC404 AI Gnosis<br/> 1100 Loong
+                    </div>
+                    <div>Coming  Soon</div>
                 </div>
-                <BtnRht onClick={()=>toGo("/mint")}>
-                    Mint Now
-                </BtnRht>
+
+
             </RhtInner>
+            {/*<RhtInner>*/}
+            {/*    <div className="lft">*/}
+            {/*        <div className="top">ERC404 PFP</div>*/}
+            {/*        <div className="price">10,000 YUME</div>*/}
+            {/*    </div>*/}
+            {/*    <BtnRht onClick={()=>toGo("/mint")}>*/}
+            {/*        Mint Now*/}
+            {/*    </BtnRht>*/}
+            {/*</RhtInner>*/}
         </RhtBox>
     </BgBox>
 }
