@@ -11,7 +11,7 @@ import {useWeb3ModalProvider} from "@web3modal/ethers/react";
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import abi from '../assets/abi/loong-abi.json'
-import {BrowserProvider, Contract, ethers} from "ethers";
+import {BrowserProvider, Contract, ethers, JsonRpcProvider} from "ethers";
 import {chain, contractAddress} from "../common/config.js";
 import Loading from "../components/loading.jsx";
 import {useSelector} from "react-redux";
@@ -252,6 +252,39 @@ export default function Mint(){
     const [pro,setPro] = useState(0);
     const [refresh, setRefresh] = useState(0)
 
+
+    useEffect(()=> {
+        (async () => {
+            try {
+                const provider = new JsonRpcProvider(chain.rpcUrl);
+                const contract = new Contract(contractAddress, abi, provider)
+                const arr = [
+                    contract.minted(),
+                    contract.totalSupply(),
+                ]
+                const rests = await Promise.all(arr)
+                console.log(rests)
+                let mintedB = rests[0].toString();
+                setMinted(mintedB);
+                let totalB = ethers.formatEther(rests[1])
+                let totalAfter = new BigNumber(totalB).div(Unit);
+                console.log(totalAfter)
+                setTotal(totalAfter.toString());
+                let MintedBN = new BigNumber(mintedB)
+                const result = MintedBN.dividedBy(totalAfter);
+                const percentage = result.times(100).toString();
+                const per = Number(percentage).toFixed(2)
+                setPro(per)
+
+            } catch (e) {
+                console.error(e)
+                setMinted('')
+                setPro(0)
+            }
+
+        })()
+    }, [refresh])
+
     useEffect(() =>{
         if (!address || !walletProvider || chainId !== chain.chainId) {
             setMintType(null)
@@ -265,43 +298,27 @@ export default function Mint(){
 
                 const arr = [
                     contract.checkFreeMint(address),
-                    contract.minted(),
-                    contract.totalSupply(),
                     contract.price(),
                     contract.limitUserMintNum(),
                     contract.limitMint(address),
                 ]
                 const rests = await Promise.all(arr)
                 setMintType(rests[0] ? MINT_TYPE_FREE : MINT_TYPE_NORMAL);
-                let mintedB = rests[1].toString();
-                setMinted(mintedB);
-                let totalB = ethers.formatEther(rests[2])
-                let totalAfter = new BigNumber(totalB).div(Unit);
-                console.log(totalAfter)
-                setTotal(totalAfter.toString());
-                setPrice( ethers.formatEther(rests[3]));
-                setLimitMemberMint(rests[4].toString())
-                setLimitMint(rests[5].toString())
 
-                let remain = Number(rests[4].toString()) - Number(rests[5].toString())
+                setPrice( ethers.formatEther(rests[1]));
+                setLimitMemberMint(rests[2].toString())
+                setLimitMint(rests[3].toString())
+
+                let remain = Number(rests[2].toString()) - Number(rests[3].toString())
                 remain = remain < 0 ? 0 : remain;
                 setNormalMintRemain(remain)
                 setCount(remain)
-
-
-                let MintedBN = new BigNumber(mintedB)
-                const result = MintedBN.dividedBy(totalAfter);
-                const percentage = result.times(100).toString();
-                const per = Number(percentage).toFixed(2)
-                setPro(per)
 
                 console.log(rests, 'normalMintRemain=' + remain)
 
             } catch (e) {
                 console.error(e)
                 setMintType(null);
-                setMinted('')
-                setTotal('')
                 setPrice('')
                 setLimitMemberMint('0')
                 setLimitMint('0')
