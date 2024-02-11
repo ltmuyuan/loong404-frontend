@@ -228,6 +228,17 @@ const LogoBox = styled.div`
     border-radius: 10px;
 `
 
+const TipBox = styled.div`
+    color: #ece2cf;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    margin-top: 20px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
 
 const MAX_COUNT = 5;
 const MINT_TYPE_FREE = '2'
@@ -437,15 +448,24 @@ export default function Mint(){
             <BtmBox>
                 <LftBox>
                     <TitleBox>AILOONG</TitleBox>
-                    <ProBox width={pro}>
-                        <div className="top">
-                            <div>TOTAL MINTED</div>
-                            <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
-                        </div>
-                        <div className="proOuter">
-                            <div className="proInner" />
-                        </div>
-                    </ProBox>
+                    {
+                        Number(pro) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
+                    }
+                    {
+                        Number(pro) > 25 &&  Number(pro) <=50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
+                    }
+                    {
+                        Number(pro) > 50 && <ProBox width={pro}>
+                            <div className="top">
+                                <div>TOTAL MINTED</div>
+                                <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
+                            </div>
+                            <div className="proOuter">
+                                <div className="proInner" />
+                            </div>
+                        </ProBox>
+                    }
+
                     <ArticleBox>
                         <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
                         <div><strong>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. </strong><span>This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</span></div>
