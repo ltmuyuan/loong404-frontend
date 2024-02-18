@@ -19,6 +19,7 @@ import {notification} from 'antd';
 import store from "../store/index.js";
 import {saveLoading} from "../store/reducer.js";
 import BigNumber from "bignumber.js";
+import LogoMint from "../assets/logoMint.png";
 
 const Layout = styled.div`
 
@@ -216,16 +217,19 @@ const MintBtn = styled.button`
 const LogoBox = styled.div`
 
     cursor: pointer;
-    width: 130px;
-    background: #83271c;
+    //background: #83271c;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    height: 40px;
+    //height: 40px;
     font-size: 23px;
     border-radius: 10px;
+    img{
+        
+        height: 50px;
+    }
 `
 
 const TipBox = styled.div`
@@ -439,8 +443,8 @@ export default function Mint(){
         <MainBox>
             <FirstLine>
                 <LogoBox onClick={()=>toGo("/")}>
-                    {/*<img src={LogoImg} alt=""/>*/}
-                    AILOONG
+                    <img src={LogoMint} alt=""/>
+                    {/*AILOONG*/}
                 </LogoBox>
                 {/*<img src={Logo} alt="" onClick={()=>toGo("/")}/>*/}
                 <ConnectButton />

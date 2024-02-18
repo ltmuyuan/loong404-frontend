@@ -4,7 +4,7 @@ import BgImg from "../assets/home-bg.jpg";
 // import LftImg from "../assets/demo/left-bottom.png";
 // import RhtImg from "../assets/demo/right-bottom.png";
 import {useNavigate} from "react-router-dom";
-
+import HomeLogo from "../assets/logoHome.png"
 
 
 const BgBox = styled.div`
@@ -34,8 +34,8 @@ const LogoBox = styled.div`
     top: 40px;
     z-index: 99;
     cursor: pointer;
-    width: 130px;
-    background: #83271c;
+    width: 200px;
+    //background: #83271c;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -44,6 +44,7 @@ const LogoBox = styled.div`
     height: 40px;
     font-size: 23px;
     border-radius: 10px;
+    img{width: 100%;}
 `
 
 const Leftbox = styled.div`
@@ -167,8 +168,8 @@ export default function Home(){
 
     return <BgBox>
         <LogoBox onClick={()=>toGo("/")}>
-            {/*<img src={LogoImg} alt=""/>*/}
-            AILOONG
+            <img src={HomeLogo} alt=""/>
+            {/*AILOONG*/}
         </LogoBox>
         <InnerBox>
             <img src={BgImg} alt="" className="bg"/>
