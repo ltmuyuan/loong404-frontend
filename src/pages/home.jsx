@@ -5,6 +5,7 @@ import BgImg from "../assets/home-bg.jpg";
 // import RhtImg from "../assets/demo/right-bottom.png";
 import {useNavigate} from "react-router-dom";
 import HomeLogo from "../assets/logoHome.png"
+import {Divider, Flex} from "antd";
 
 
 const BgBox = styled.div`
@@ -112,7 +113,7 @@ const RhtBox = styled.div`
 const RhtInner = styled.div`
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     gap: 30px;
     padding: 0 30px;
     .lft{
@@ -192,15 +193,25 @@ export default function Home(){
 
 
             {/*</RhtInner>*/}
-            <RhtInner>
-                <div className="lft">
-                    <div className="top">ERC404 AI Gnosis</div>
-                    <div className="price"><span className="center"> 1100 Loong</span></div>
-                </div>
-                <BtnRht onClick={()=>toGo("/mint")}>
-                    Mint Now
-                </BtnRht>
-            </RhtInner>
+            <Flex vertical gap={30}>
+                <RhtInner>
+                    <div className="lft">
+                        <div className="top">ERC404 AI Gnosis</div>
+                        <div className="price"><span className="center"> 1100 Loong</span></div>
+                    </div>
+                    <BtnRht onClick={()=>toGo("/mint")}>
+                        Mint Now
+                    </BtnRht>
+                </RhtInner>
+                <RhtInner>
+                    <div className="lft">
+                        <div className="top">Chat with Me</div>
+                    </div>
+                    <BtnRht onClick={()=>toGo("/chat")}>
+                        Start
+                    </BtnRht>
+                </RhtInner>
+            </Flex>
         </RhtBox>
     </BgBox>
 }
