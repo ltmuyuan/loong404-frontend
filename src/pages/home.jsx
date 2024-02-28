@@ -6,6 +6,7 @@ import BgImg from "../assets/home-bg.jpg";
 import { useNavigate } from "react-router-dom";
 import HomeLogo from "../assets/logoHome.png"
 import { Divider, Flex } from "antd";
+import ConnectButton from "../components/ConnectButton";
 import TokenSwap from "../components/tokenswap";
 
 
@@ -14,20 +15,27 @@ const BgBox = styled.div`
     min-height: 100vh;
     background: #fdfaf1;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
 `
 const InnerBox = styled.div`
+    width: 100%;
     display: flex;
+    flex-direction: column;
     align-content: center;
     justify-content: center;
     position: relative;
-    margin: 0 auto;
-    max-width: 1600px;
     .bg{
         width: 100%;
     }
+    `
+
+const InnerBoxContent = styled.div`
+    width: 100%;
+    max-width: 1600px;
+    display: flex;
 `
 
 const LogoBox = styled.div`
@@ -47,6 +55,13 @@ const LogoBox = styled.div`
     font-size: 23px;
     border-radius: 10px;
     img{width: 100%;}
+`
+
+const ConnectBox = styled.div`
+    position: absolute;
+    right: 40px;
+    top: 40px;
+    z-index: 99;
 `
 
 const Leftbox = styled.div`
@@ -76,16 +91,35 @@ const Leftbox = styled.div`
     }
 `
 
-const RhtBox = styled.div`
+const FloatBox = styled.div`
     position: absolute;
-    //width: 660px;
-    padding:20px;
+    right: 0;
+    top: 25vw;
+    @media (max-width: 1440px) {
+        right: 0;
+        top: 28vw;
+    }
+    @media (max-width: 1100px) {
+        /* top: auto;
+        bottom: 20vw;
+        right: 10vw;
+        left: 10vw; */
+        padding: 35px 0;
+        position: static;
+        margin: 0 20px;
+    }
+    & > *:not(:first-child) {
+        margin-top: 20px;
+    }
+`
 
+const RhtBox = styled.div`
+    padding:20px;
     background: #83271c;
     box-shadow: 0 0 4px #999;
-    right:0;
     border-radius: 15px;
-    top: 25vw;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -99,12 +133,8 @@ const RhtBox = styled.div`
         top:28vw;
     }
     @media (max-width: 1100px) {
-        height: 20vw;
-        width:80vw;
-        bottom:20vw;
-        top:auto;
+        border-radius: 15px;
         justify-content: center;
-        right: 10vw;
         .rht{
             width: 38vw;
         }
@@ -132,7 +162,9 @@ const RhtInner = styled.div`
     }
     @media (max-width: 1100px) {
         .lft{
+            width: 150px;
             font-size: 13px;
+            text-align: center;
         }
         .top{
             margin-bottom: 10px;
@@ -154,7 +186,7 @@ const BtnRht = styled.div`
 
     @media (max-width: 1100px) {
         width: 26vw;
-        height: 13vw;
+        height: 45px;
        margin: 0 15px;
     }
 `

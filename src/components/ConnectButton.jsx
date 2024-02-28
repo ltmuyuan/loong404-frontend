@@ -2,7 +2,8 @@ import {useDisconnect, useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ether
 import styled from "styled-components";
 import {  Popover } from 'antd';
 import {useState} from "react";
-
+import Modal from "./ui/Modal";
+import Button from "./ui/Button";
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -32,6 +33,10 @@ const LineBox = styled.ul`
         }
     }
 `
+const InviteFriendsRow = styled.div`
+    display: flex;
+    gap: 20px;
+`;
 
 function truncateString(str, maxLength) {
     if (str.length <= maxLength) {
@@ -49,6 +54,8 @@ export default function ConnectButton() {
     const { open } = useWeb3Modal()
     const { address, chainId, isConnected } = useWeb3ModalAccount()
     const { disconnect } = useDisconnect()
+    const [isModalOpenInvite, setIsModalOpenInvite] = useState(false)
+    const [inviteCode, setInviteCode] = useState('xxx')
 
     // console.log(address, chainId)
 
@@ -72,10 +79,23 @@ export default function ConnectButton() {
     }
 
     const content = (
-        <LineBox>
-            <li onClick={()=>toAccount()}>Account</li>
-            <li onClick={()=>disconnectWallet()}>Logout</li>
-        </LineBox>
+        <>
+            <LineBox>
+                <li onClick={()=>toAccount()}>Account</li>
+                <li onClick={()=>setIsModalOpenInvite(true)}>Invite</li>
+                <li onClick={()=>{}}>Reward</li>
+                <li onClick={()=>disconnectWallet()}>Logout</li>
+            </LineBox>
+            <Modal isOpen={isModalOpenInvite} onClose={() => setIsModalOpenInvite(false)} title="Invite friends">
+                <div>Invite your friends to join our community with a custom referral code</div>
+                <InviteFriendsRow>
+                    <div>Invite Code:</div>
+                    <div>{inviteCode}</div>
+                    <div>Copy</div>
+                </InviteFriendsRow>
+                <Button>Done</Button>
+            </Modal>
+        </>
     );
 
     // return <ConnectBtn onClick={()=>onClick()}>{btnText}</ConnectBtn>

@@ -8,7 +8,7 @@ import BgImg from "../assets/demo/bg.png";
 import ConnectButton from "../components/ConnectButton.jsx";
 import {useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
 import {useWeb3ModalProvider} from "@web3modal/ethers/react";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, Outlet, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import abi from '../assets/abi/loong-abi.json'
 import {BrowserProvider, Contract, ethers, JsonRpcProvider} from "ethers";
@@ -249,7 +249,160 @@ const MINT_TYPE_FREE = '2'
 const MINT_TYPE_NORMAL = '1'
 const  Unit = 600000;
 
-export default function Mint(){
+export function MintGreat() {
+    const [pro,setPro] = useState(0);
+    const [mintType, setMintType] = useState(null)
+    const [minted, setMinted] = useState('')
+    const [total, setTotal] = useState('')
+    const [price, setPrice] = useState('')
+    const [limitMemberMint, setLimitMemberMint] = useState('0')
+    const [limitMint, setLimitMint] = useState('0')
+
+    return <Mint>
+        <BtmBox>
+            <LftBox>
+                <TitleBox>Great Loong</TitleBox>
+                {
+                    Number(pro) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
+                }
+                {
+                    Number(pro) > 25 &&  Number(pro) <=50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
+                }
+                {
+                    Number(pro) > 50 && <ProBox width={pro}>
+                        <div className="top">
+                            <div>TOTAL MINTED</div>
+                            <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
+                        </div>
+                        <div className="proOuter">
+                            <div className="proInner" />
+                        </div>
+                    </ProBox>
+                }
+
+                <ArticleBox>
+                    <div><strong>Great Loong</strong>:  An adult Loong spirit, rare in quantity, can provide the most comprehensive metaphysical predictions and advice for the holder. When exploring in the cyberspace, it can also grab more&better treasures. Periodically, the divine dragon spirit will automatically analyze the holder's fortune and help them ward off disasters, avoid misfortunes, and seek good fortune.</div>
+                    <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
+                    <div><strong>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. </strong><span>This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</span></div>
+                    <p>In AILoong tradition meets innovation. As the vanguards of the ERC404 standard, these NFTs are not merely artistic renderings but are also imbued with the versatility of being both tradeable tokens and collectible gnosis AI art pieces. AILoong transcends the conventional, allowing each loong to live in two worlds: the fluidity of DEXs and the curated halls of NFT marketplaces.</p>
+                    <p>Embrace the spirit of the mysterious gnosis AI, claim your AILoong, and make your mark in the new era of AI digital collectibles.</p>
+                </ArticleBox>
+                <SocialBox>
+                    <Link to="/">
+                        <img src={GlobalImg} alt=""/>
+                    </Link>
+                    <Link to="https://twitter.com/AIloongglobal" target="_blank" >
+                        <img src={TwitterImg} alt=""/>
+                    </Link>
+
+                </SocialBox>
+                <PublicBox>
+                    <div>public</div>
+                    <div>{limitMemberMint} per wallet * {price} ETH</div>
+                </PublicBox>
+            </LftBox>
+            <RhtBox>
+                <PhotoBox>
+                    <img src={DemoImg} alt=""/>
+                </PhotoBox>
+                {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
+                    <FlexLine>
+                        <div>Price: {price} ETH</div>
+                        <RhtInput>
+                            <img src={LftImg} alt="" onClick={()=>step('plus')}/>
+                            <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
+                            <img src={RhtImg} alt=""  onClick={()=>step('add')}/>
+                        </RhtInput>
+                    </FlexLine>
+                </RhtBtmBox>}
+
+
+                {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint * {MINT_TYPE_FREE}</MintBtn>}
+                {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
+                {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
+
+            </RhtBox>
+        </BtmBox>
+    </Mint>
+}
+
+export function MintBaby() {
+    const [pro,setPro] = useState(0);
+    const [mintType, setMintType] = useState(null)
+    const [minted, setMinted] = useState('')
+    const [total, setTotal] = useState('')
+    const [price, setPrice] = useState('')
+    const [limitMemberMint, setLimitMemberMint] = useState('0')
+    const [limitMint, setLimitMint] = useState('0')
+    return <Mint>
+        <BtmBox>
+            <LftBox>
+                <TitleBox>Baby Loong</TitleBox>
+                {
+                    Number(pro) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
+                }
+                {
+                    Number(pro) > 25 &&  Number(pro) <=50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
+                }
+                {
+                    Number(pro) > 50 && <ProBox width={pro}>
+                        <div className="top">
+                            <div>TOTAL MINTED</div>
+                            <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
+                        </div>
+                        <div className="proOuter">
+                            <div className="proInner" />
+                        </div>
+                    </ProBox>
+                }
+
+                <ArticleBox>
+                    <div><strong>Baby Loong</strong>: Even though may just be a baby, but Baby Loong can still provide the holder with predictions and advice. Due to its limited power, it may not bring back abundant treasures from exploring in the cyberspace. Similar to the Great Loong, it can also periodically analyze the holder's fortune and help them ward off disasters, avoid misfortunes, and seek good fortune.</div>
+                    <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
+                    <div><strong>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. </strong><span>This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</span></div>
+                    <p>In AILoong tradition meets innovation. As the vanguards of the ERC404 standard, these NFTs are not merely artistic renderings but are also imbued with the versatility of being both tradeable tokens and collectible gnosis AI art pieces. AILoong transcends the conventional, allowing each loong to live in two worlds: the fluidity of DEXs and the curated halls of NFT marketplaces.</p>
+                    <p>Embrace the spirit of the mysterious gnosis AI, claim your AILoong, and make your mark in the new era of AI digital collectibles.</p>
+                </ArticleBox>
+                <SocialBox>
+                    <Link to="/">
+                        <img src={GlobalImg} alt=""/>
+                    </Link>
+                    <Link to="https://twitter.com/AIloongglobal" target="_blank" >
+                        <img src={TwitterImg} alt=""/>
+                    </Link>
+
+                </SocialBox>
+                <PublicBox>
+                    <div>public</div>
+                    <div>{limitMemberMint} per wallet * {price} ETH</div>
+                </PublicBox>
+            </LftBox>
+            <RhtBox>
+                <PhotoBox>
+                    <img src={DemoImg} alt=""/>
+                </PhotoBox>
+                {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
+                    <FlexLine>
+                        <div>Price: {price} ETH</div>
+                        <RhtInput>
+                            <img src={LftImg} alt="" onClick={()=>step('plus')}/>
+                            <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
+                            <img src={RhtImg} alt=""  onClick={()=>step('add')}/>
+                        </RhtInput>
+                    </FlexLine>
+                </RhtBtmBox>}
+
+
+                {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint * {MINT_TYPE_FREE}</MintBtn>}
+                {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
+                {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
+
+            </RhtBox>
+        </BtmBox>
+    </Mint>
+}
+
+function Mint({ children }){
     const { address, chainId,  isConnected } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
     const [count, setCount] = useState(0)
@@ -266,7 +419,6 @@ export default function Mint(){
     const [api, contextHolder] = notification.useNotification();
     const [pro,setPro] = useState(0);
     const [refresh, setRefresh] = useState(0)
-
 
     useEffect(()=> {
         (async () => {
@@ -449,69 +601,7 @@ export default function Mint(){
                 {/*<img src={Logo} alt="" onClick={()=>toGo("/")}/>*/}
                 <ConnectButton />
             </FirstLine>
-            <BtmBox>
-                <LftBox>
-                    <TitleBox>AILOONG</TitleBox>
-                    {
-                        Number(pro) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
-                    }
-                    {
-                        Number(pro) > 25 &&  Number(pro) <=50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
-                    }
-                    {
-                        Number(pro) > 50 && <ProBox width={pro}>
-                            <div className="top">
-                                <div>TOTAL MINTED</div>
-                                <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
-                            </div>
-                            <div className="proOuter">
-                                <div className="proInner" />
-                            </div>
-                        </ProBox>
-                    }
-
-                    <ArticleBox>
-                        <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
-                        <div><strong>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. </strong><span>This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</span></div>
-                        <p>In AILoong tradition meets innovation. As the vanguards of the ERC404 standard, these NFTs are not merely artistic renderings but are also imbued with the versatility of being both tradeable tokens and collectible gnosis AI art pieces. AILoong transcends the conventional, allowing each loong to live in two worlds: the fluidity of DEXs and the curated halls of NFT marketplaces.</p>
-                        <p>Embrace the spirit of the mysterious gnosis AI, claim your AILoong, and make your mark in the new era of AI digital collectibles.</p>
-                    </ArticleBox>
-                    <SocialBox>
-                        <Link to="/">
-                            <img src={GlobalImg} alt=""/>
-                        </Link>
-                        <Link to="https://twitter.com/AIloongglobal" target="_blank" >
-                            <img src={TwitterImg} alt=""/>
-                        </Link>
-
-                    </SocialBox>
-                    <PublicBox>
-                        <div>public</div>
-                        <div>{limitMemberMint} per wallet * {price} ETH</div>
-                    </PublicBox>
-                </LftBox>
-                <RhtBox>
-                    <PhotoBox>
-                        <img src={DemoImg} alt=""/>
-                    </PhotoBox>
-                    {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
-                        <FlexLine>
-                            <div>Price: {price} ETH</div>
-                            <RhtInput>
-                                <img src={LftImg} alt="" onClick={()=>step('plus')}/>
-                                <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
-                                <img src={RhtImg} alt=""  onClick={()=>step('add')}/>
-                            </RhtInput>
-                        </FlexLine>
-                    </RhtBtmBox>}
-
-
-                    {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint * {MINT_TYPE_FREE}</MintBtn>}
-                    {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
-                    {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
-
-                </RhtBox>
-            </BtmBox>
+            {children}
         </MainBox>
 
     </Layout>
