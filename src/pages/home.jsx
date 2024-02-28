@@ -18,6 +18,9 @@ const BgBox = styled.div`
     align-items: center;
     justify-content: center;
     position: relative;
+    @media (max-width: 1100px) {
+        padding-top: 100px;
+    }
 `
 const InnerBox = styled.div`
     width: 100%;
@@ -54,6 +57,11 @@ const LogoBox = styled.div`
     font-size: 23px;
     border-radius: 10px;
     img{width: 100%;}
+    @media (max-width: 1100px) {
+        left: 5vw;
+        top: 5vw;
+        width: 145px;
+    }
 `
 
 const ConnectBox = styled.div`
@@ -61,6 +69,10 @@ const ConnectBox = styled.div`
     right: 40px;
     top: 40px;
     z-index: 99;
+    @media (max-width: 1100px) {
+        right: 5vw;
+        top: 5vw;
+    }
 `
 
 const Leftbox = styled.div`

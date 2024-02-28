@@ -10,12 +10,20 @@ const Box = styled.div`
     background: #fdfaf1;
     color: #000000;
     padding-bottom: 120px;
+    @media (max-width: 1100px) {
+        margin: 0 20px;
+        padding-bottom: 60px;
+    }
     .title {
         font-size: 80px;
         font-weight: 700;
         color: #000000;
         text-align: center;
         padding-top: 100px;
+        @media (max-width: 1100px) {
+            font-size: 40px;
+            padding-top: 50px;
+        }
     }
     .des {
         font-size: 20px;
@@ -49,6 +57,9 @@ const Box = styled.div`
             margin: 0 auto 20px;
             padding: 30px 40px;
             box-sizing: border-box;
+            @media (max-width: 1100px) {
+                width: 100%;
+            }
             .label {
                 font-size: 16px;
                 font-weight: 400;
@@ -108,6 +119,9 @@ const Btn = styled.div`
     user-select: none;
     cursor: pointer;
     margin-top: 10px;
+    @media (max-width: 1100px) {
+        width: 100%;
+    }
 `
 
 const options = [

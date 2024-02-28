@@ -68,7 +68,10 @@ export default function ConnectButton() {
     const { disconnect } = useDisconnect()
     const { walletProvider } = useWeb3ModalProvider()
     const [isModalOpenInvite, setIsModalOpenInvite] = useState(false)
+    const [isModalOpenReward, setIsModalOpenReward] = useState(false)
     const [inviteCode, setInviteCode] = useState('xxx')
+    const [babyLoong, setBabyLoong] = useState(0)
+    const [greatLoong, setGreatLoong] = useState(0)
 
     const onClick = () => {
         open()
@@ -122,7 +125,7 @@ export default function ConnectButton() {
             <LineBox>
                 <li onClick={() => toAccount()}>Account</li>
                 <li onClick={() => onInvite()}>Invite</li>
-                <li onClick={() => { }}>Reward</li>
+                <li onClick={()=>setIsModalOpenReward(true)}>Reward</li>
                 <li onClick={() => disconnectWallet()}>Logout</li>
             </LineBox>
         </>
@@ -144,6 +147,13 @@ export default function ConnectButton() {
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClose}>Done</Button>
                 </div>
+            </Modal>
+            <Modal isOpen={isModalOpenReward} onClose={() => setIsModalOpenReward(false)} title="Claim your reward">
+                <div>Earn rewards through various activities like inviting friends to mint NFTs</div>
+                <div><strong>Rewards available:</strong></div>
+                <div><strong>{greatLoong}</strong>Great Loong Tokens</div>
+                <div><strong>{babyLoong}</strong>Baby Loong Tokens</div>
+                <Button>Claim</Button>
             </Modal>
         </>
     ) :

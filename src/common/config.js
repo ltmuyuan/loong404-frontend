@@ -25,5 +25,5 @@ const optest = {
 
 export const chain = optest;
 // export const contractAddress = '0x582a2124A6a47Db11B33f5ae67B12055655396d8'
-// export const chain = mainnetx;
+// export const chain = mainnet;
 export const contractAddress = '0xBc4B1e8caC87872AA6970f4d396C778CAE4F4C1F'
