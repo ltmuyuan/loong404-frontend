@@ -52,6 +52,9 @@ const GlobalStyle = createGlobalStyle`
   input[type="number"]::-webkit-outer-spin-button {
       -webkit-appearance: none; /* Safari */
   }
+  .ant-select-item-option-selected .ant-select-item-option-content {
+      color: #000000;
+  }
 `;
 
 export default GlobalStyle;

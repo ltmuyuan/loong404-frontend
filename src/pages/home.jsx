@@ -3,9 +3,10 @@ import BgImg from "../assets/home-bg.jpg";
 // import LogoImg from "../assets/demo/logo.svg";
 // import LftImg from "../assets/demo/left-bottom.png";
 // import RhtImg from "../assets/demo/right-bottom.png";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import HomeLogo from "../assets/logoHome.png"
-import {Divider, Flex} from "antd";
+import { Divider, Flex } from "antd";
+import TokenSwap from "../components/tokenswap";
 
 
 const BgBox = styled.div`
@@ -160,58 +161,61 @@ const BtnRht = styled.div`
 
 
 
-export default function Home(){
+export default function Home() {
     const navigate = useNavigate()
 
-    const toGo = (url) =>{
+    const toGo = (url) => {
         navigate(url)
     }
 
-    return <BgBox>
-        <LogoBox onClick={()=>toGo("/")}>
-            <img src={HomeLogo} alt=""/>
-            {/*AILOONG*/}
-        </LogoBox>
-        <InnerBox>
-            <img src={BgImg} alt="" className="bg"/>
+    return <>
+        <BgBox>
+            <LogoBox onClick={() => toGo("/")}>
+                <img src={HomeLogo} alt="" />
+                {/*AILOONG*/}
+            </LogoBox>
+            <InnerBox>
+                <img src={BgImg} alt="" className="bg" />
 
 
-        </InnerBox>
-        {/*<Leftbox>*/}
-        {/*    <img src={LftImg} alt="" className="lft" />*/}
-        {/*    <span>Mirai</span>*/}
-        {/*</Leftbox>*/}
-        <RhtBox>
-            {/*<img src={RhtImg} className="rht" alt=""/>*/}
-            {/*<RhtInner>*/}
-            {/*    <div className="lft">*/}
-            {/*        <div className="top">*/}
-            {/*            <span>ERC404 AI Gnosis</span><span className="center"> 1100 Loong</span>*/}
-            {/*        </div>*/}
-            {/*        <div className="com">Coming  Soon</div>*/}
-            {/*    </div>*/}
+            </InnerBox>
+            {/*<Leftbox>*/}
+            {/*    <img src={LftImg} alt="" className="lft" />*/}
+            {/*    <span>Mirai</span>*/}
+            {/*</Leftbox>*/}
+            <RhtBox>
+                {/*<img src={RhtImg} className="rht" alt=""/>*/}
+                {/*<RhtInner>*/}
+                {/*    <div className="lft">*/}
+                {/*        <div className="top">*/}
+                {/*            <span>ERC404 AI Gnosis</span><span className="center"> 1100 Loong</span>*/}
+                {/*        </div>*/}
+                {/*        <div className="com">Coming  Soon</div>*/}
+                {/*    </div>*/}
 
 
-            {/*</RhtInner>*/}
-            <Flex vertical gap={30}>
-                <RhtInner>
-                    <div className="lft">
-                        <div className="top">ERC404 AI Gnosis</div>
-                        <div className="price"><span className="center"> 1100 Loong</span></div>
-                    </div>
-                    <BtnRht onClick={()=>toGo("/mint")}>
-                        Mint Now
-                    </BtnRht>
-                </RhtInner>
-                <RhtInner>
-                    <div className="lft">
-                        <div className="top">Chat with Me</div>
-                    </div>
-                    <BtnRht onClick={()=>toGo("/chat")}>
-                        Start
-                    </BtnRht>
-                </RhtInner>
-            </Flex>
-        </RhtBox>
-    </BgBox>
+                {/*</RhtInner>*/}
+                <Flex vertical gap={30}>
+                    <RhtInner>
+                        <div className="lft">
+                            <div className="top">ERC404 AI Gnosis</div>
+                            <div className="price"><span className="center"> 1100 Loong</span></div>
+                        </div>
+                        <BtnRht onClick={() => toGo("/mint")}>
+                            Mint Now
+                        </BtnRht>
+                    </RhtInner>
+                    <RhtInner>
+                        <div className="lft">
+                            <div className="top">Chat with Me</div>
+                        </div>
+                        <BtnRht onClick={() => toGo("/chat")}>
+                            Start
+                        </BtnRht>
+                    </RhtInner>
+                </Flex>
+            </RhtBox>
+        </BgBox>
+        <TokenSwap />
+    </>
 }
