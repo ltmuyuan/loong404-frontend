@@ -15,8 +15,15 @@ const testnet = {
     rpcUrl: 'https://data-seed-prebsc-1-s1.bnbchain.org:8545'
 }
 
-// export const chain = testnet;
-// export const contractAddress = '0x582a2124A6a47Db11B33f5ae67B12055655396d8'
-export const chain = mainnet;
+const optest = {
+    chainId: 11155420,
+    name: 'Optimism Testnet',
+    currency: 'ETH',
+    explorerUrl: 'https://sepolia-optimism.etherscan.io/',
+    rpcUrl: 'https://sepolia.optimism.io'
+}
 
+export const chain = optest;
+// export const contractAddress = '0x582a2124A6a47Db11B33f5ae67B12055655396d8'
+// export const chain = mainnet;
 export const contractAddress = '0xBc4B1e8caC87872AA6970f4d396C778CAE4F4C1F'

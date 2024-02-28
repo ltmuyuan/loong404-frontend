@@ -8,14 +8,15 @@ const StyledButton = styled.button`
   border: none;
   border-radius: 5px;
   cursor: pointer;
-
+  font-size: 20px;
+  font-weight: 400;
   &:hover {
     background-color: #792E22;
   }
 `;
 
-const Button = ({ children, onClick }) => {
-  return <StyledButton onClick={onClick}>{children}</StyledButton>;
+const Button = ({ children, onClick, style }) => {
+  return <StyledButton onClick={onClick} style={style}>{children}</StyledButton>;
 };
 
 export default Button;
