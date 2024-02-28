@@ -23,6 +23,7 @@ import LogoMint from "../assets/logoMint.png";
 import Modal from "../components/ui/Modal";
 import Button from "../components/ui/Button.jsx";
 
+// #region Css
 const Layout = styled.div`
 
     width: 100%;
@@ -265,6 +266,7 @@ const TipBox = styled.div`
     align-items: center;
     justify-content: center;
 `
+// #endregion
 
 
 const MAX_COUNT = 5;
