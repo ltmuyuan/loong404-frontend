@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import CopySvg from '../assets/copy.svg';
-import { generateInviteCode, getInviteCode } from "../utils/web3";
+import { generateInviteCode, getInviteCode, getClaimAmount, claimRewards } from "../utils/web3";
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -61,12 +61,12 @@ const RewardBox = styled.div`
         margin-bottom: 18px;
     }
     .tokens {
-        margin-bottom: 12px;
+        margin-bottom: 20px;
         strong {
             font-size: 32px;
             font-weight: 700;
             color: #792E22;
-            margin-right: 4px;
+            margin-right: 8px;
         }
     }
 `;
@@ -91,8 +91,7 @@ export default function ConnectButton() {
     const [isModalOpenInvite, setIsModalOpenInvite] = useState(false)
     const [isModalOpenReward, setIsModalOpenReward] = useState(false)
     const [inviteCode, setInviteCode] = useState('xxx')
-    const [babyLoong, setBabyLoong] = useState(0)
-    const [greatLoong, setGreatLoong] = useState(0)
+    const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
 
     const onClick = () => {
         open()
@@ -130,6 +129,12 @@ export default function ConnectButton() {
         setInviteCode(code)
     }
 
+    const tokensInit = async () => {
+        const greateAmount = await getClaimAmount(walletProvider, true)
+        const babyAmount = await getClaimAmount(walletProvider, false)
+        setTokens({ greatLoong: greateAmount, babyLoong: babyAmount })
+    }
+
     const onInvite = () => {
         setIsModalOpenInvite(true)
         setPopoverOpen(false)
@@ -140,8 +145,23 @@ export default function ConnectButton() {
         setPopoverOpen(false)
     }
 
-    const onClaim = () => {
-
+    const onClaim = async () => {
+        try {
+            if (tokens.greatLoong > 0) {
+                await claimRewards(walletProvider, true)
+            }
+            if (tokens.babyLoong > 0) {
+                await claimRewards(walletProvider, false)
+            }
+            if (tokens.greatLoong > 0 || tokens.babyLoong > 0) {
+                message.success('Claim successfully!')
+                setIsModalOpenReward(false)
+            } else {
+                message.warning('No rewards to claim!')
+            }
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     useEffect(() => {
@@ -149,6 +169,12 @@ export default function ConnectButton() {
             inviteCodeInit()
         }
     }, [address, isModalOpenInvite])
+
+    useEffect(() => {
+        if (address && isModalOpenReward) {
+            tokensInit()
+        }
+    }, [address, isModalOpenReward])
 
     const content = (
         <>
@@ -181,10 +207,10 @@ export default function ConnectButton() {
                 <RewardBox>
                     <div className="des">Earn rewards through various activities like inviting friends to mint NFTs</div>
                     <div className="rewardTitle">Rewards available:</div>
-                    <div className="tokens"><strong>{greatLoong}</strong>Great Loong Tokens</div>
-                    <div className="tokens"><strong>{babyLoong}</strong>Baby Loong Tokens</div>
+                    <div className="tokens"><strong>{tokens.greatLoong}</strong>Great Loong Tokens</div>
+                    <div className="tokens"><strong>{tokens.babyLoong}</strong>Baby Loong Tokens</div>
                 </RewardBox>
-                <div style={{ display: "flex", justifyContent: "center" }}>
+                <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
                     <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClaim}>Claim</Button>
                 </div>
             </Modal>
