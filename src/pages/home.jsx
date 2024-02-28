@@ -5,10 +5,9 @@ import BgImg from "../assets/home-bg.jpg";
 // import RhtImg from "../assets/demo/right-bottom.png";
 import { useNavigate } from "react-router-dom";
 import HomeLogo from "../assets/logoHome.png"
-import { Divider, Flex } from "antd";
-import ConnectButton from "../components/ConnectButton";
 import TokenSwap from "../components/tokenswap";
-
+import {Divider, Flex} from "antd";
+import ConnectButton from "../components/ConnectButton";
 
 const BgBox = styled.div`
     width: 100%;
@@ -200,54 +199,56 @@ export default function Home() {
         navigate(url)
     }
 
-    return <>
-        <BgBox>
-            <LogoBox onClick={() => toGo("/")}>
-                <img src={HomeLogo} alt="" />
-                {/*AILOONG*/}
-            </LogoBox>
-            <InnerBox>
-                <img src={BgImg} alt="" className="bg" />
-
-
-            </InnerBox>
-            {/*<Leftbox>*/}
-            {/*    <img src={LftImg} alt="" className="lft" />*/}
-            {/*    <span>Mirai</span>*/}
-            {/*</Leftbox>*/}
-            <RhtBox>
-                {/*<img src={RhtImg} className="rht" alt=""/>*/}
-                {/*<RhtInner>*/}
-                {/*    <div className="lft">*/}
-                {/*        <div className="top">*/}
-                {/*            <span>ERC404 AI Gnosis</span><span className="center"> 1100 Loong</span>*/}
-                {/*        </div>*/}
-                {/*        <div className="com">Coming  Soon</div>*/}
-                {/*    </div>*/}
-
-
-                {/*</RhtInner>*/}
-                <Flex vertical gap={30}>
+    return <BgBox>
+        <LogoBox onClick={()=>toGo("/")}>
+            <img src={HomeLogo} alt=""/>
+            {/*AILOONG*/}
+        </LogoBox>
+        <ConnectBox>
+            <ConnectButton />
+        </ConnectBox>
+        <InnerBox>
+            <InnerBoxContent>
+                <img src={BgImg} alt="" className="bg"/>
+            </InnerBoxContent>
+            <FloatBox>
+                <RhtBox>
                     <RhtInner>
                         <div className="lft">
                             <div className="top">ERC404 AI Gnosis</div>
-                            <div className="price"><span className="center"> 1100 Loong</span></div>
+                            <div className="price"><span className="center"> 1100 Great Loong</span></div>
                         </div>
-                        <BtnRht onClick={() => toGo("/mint")}>
+                        <BtnRht onClick={()=>toGo("/mint/great")}>
                             Mint Now
                         </BtnRht>
                     </RhtInner>
+                </RhtBox>
+                <RhtBox>
+                    <RhtInner>
+                        <div className="lft">
+                            <div className="top">ERC404 AI Gnosis</div>
+                            <div className="price"><span className="center"> 1100 Baby Loong</span></div>
+                        </div>
+                        <BtnRht onClick={()=>toGo("/mint/baby")}>
+                            Mint Now
+                        </BtnRht>
+                    </RhtInner>
+                </RhtBox>
+                <RhtBox>
                     <RhtInner>
                         <div className="lft">
                             <div className="top">Chat with Me</div>
                         </div>
-                        <BtnRht onClick={() => toGo("/chat")}>
+                        <BtnRht onClick={()=>toGo("/chat")}>
                             Start
                         </BtnRht>
                     </RhtInner>
-                </Flex>
-            </RhtBox>
-        </BgBox>
-        <TokenSwap />
-    </>
+                </RhtBox>
+            </FloatBox>
+        </InnerBox>
+        {/* Swap */}
+        <InnerBox>
+           <TokenSwap />
+        </InnerBox>
+    </BgBox>
 }
