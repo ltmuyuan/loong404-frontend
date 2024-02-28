@@ -150,7 +150,8 @@ const TokenSwap = () => {
                 await swap(walletProvider, firstInput, firstValue === 1)
                 message.success('Swap success')
             } catch (e) {
-                message.error('Swap failed')
+                const msg = e.message ? `Swap failed: ${e.message}` : 'Swap failed'
+                message.error(msg)
             }
         }
     }
