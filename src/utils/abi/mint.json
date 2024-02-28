@@ -1,0 +1,74 @@
+{
+  "abi": [
+    {
+      "inputs": [],
+      "name": "claim",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "freeMintAdultLoong",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "freeMintBabyLoong",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "string",
+          "name": "_inviteCode",
+          "type": "string"
+        }
+      ],
+      "name": "generateInviteCode",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "num",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_inviteCode",
+          "type": "string"
+        }
+      ],
+      "name": "mintAdultLoong",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "num",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "_inviteCode",
+          "type": "string"
+        }
+      ],
+      "name": "mintBabyLong",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    }
+  ]
+}
