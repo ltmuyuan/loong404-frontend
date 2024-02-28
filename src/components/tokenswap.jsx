@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react';
-import { InputNumber, Select } from "antd";
+import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
 import ArrowSvg from '../assets/arrow.svg';
 import { swap } from "../utils/web3";
@@ -149,7 +149,7 @@ const TokenSwap = () => {
             try {
                 await swap(walletProvider, firstInput, firstValue === 1)
             } catch (e) {
-                console.log(e)
+                message.error('Swap failed')
             }
         }
     }
