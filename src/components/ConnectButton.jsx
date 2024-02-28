@@ -1,10 +1,11 @@
-import {useDisconnect, useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
+import { useDisconnect, useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react'
 import styled from "styled-components";
-import {  Popover, message } from 'antd';
-import {useState} from "react";
+import { Popover, message } from 'antd';
+import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import CopySvg from '../assets/copy.svg';
+import { generateInviteCode, getInviteCode } from "../utils/web3";
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -65,10 +66,9 @@ export default function ConnectButton() {
     const { open } = useWeb3Modal()
     const { address, chainId, isConnected } = useWeb3ModalAccount()
     const { disconnect } = useDisconnect()
+    const { walletProvider } = useWeb3ModalProvider()
     const [isModalOpenInvite, setIsModalOpenInvite] = useState(false)
     const [inviteCode, setInviteCode] = useState('xxx')
-
-    // console.log(address, chainId)
 
     const onClick = () => {
         open()
@@ -98,14 +98,42 @@ export default function ConnectButton() {
         setIsModalOpenInvite(false)
     }
 
+    const inviteCodeInit = async () => {
+        let code = await getInviteCode(walletProvider)
+        if (!code) {
+            code = await generateInviteCode(walletProvider)
+        }
+        setInviteCode(code)
+    }
+
+    const onInvite = () => {
+        setIsModalOpenInvite(true)
+        setPopoverOpen(false)
+    }
+
+    useEffect(() => {
+        if (address && isModalOpenInvite && inviteCode === 'xxx') {
+            inviteCodeInit()
+        }
+    }, [address, isModalOpenInvite])
+
     const content = (
         <>
             <LineBox>
-                <li onClick={()=>toAccount()}>Account</li>
-                <li onClick={()=>setIsModalOpenInvite(true)}>Invite</li>
-                <li onClick={()=>{}}>Reward</li>
-                <li onClick={()=>disconnectWallet()}>Logout</li>
+                <li onClick={() => toAccount()}>Account</li>
+                <li onClick={() => onInvite()}>Invite</li>
+                <li onClick={() => { }}>Reward</li>
+                <li onClick={() => disconnectWallet()}>Logout</li>
             </LineBox>
+        </>
+    );
+
+    // return <ConnectBtn onClick={()=>onClick()}>{btnText}</ConnectBtn>
+    return address ? (
+        <>
+            <Popover placement="bottom" onOpenChange={handleOpenChange} open={popoverOpen} content={content} trigger="click">
+                <ConnectBtn>{truncateString(address, 15)}</ConnectBtn>
+            </Popover>
             <Modal isOpen={isModalOpenInvite} onClose={() => setIsModalOpenInvite(false)} title="Invite friends">
                 <div>Invite your friends to join our community with a custom referral code</div>
                 <InviteFriendsRow onClick={onCopy}>
@@ -114,16 +142,10 @@ export default function ConnectButton() {
                     <img src={CopySvg} alt="copy" title="copy" />
                 </InviteFriendsRow>
                 <div style={{ display: "flex", justifyContent: "center" }}>
-                <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClose}>Done</Button>
+                    <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClose}>Done</Button>
                 </div>
             </Modal>
         </>
-    );
-
-    // return <ConnectBtn onClick={()=>onClick()}>{btnText}</ConnectBtn>
-    return address ?
-        <Popover placement="bottom" onOpenChange={handleOpenChange} open={popoverOpen} content={content} trigger="click">
-            <ConnectBtn>{truncateString(address, 15) }</ConnectBtn>
-        </Popover> :
+    ) :
         <ConnectBtn onClick={onClick}>Connect Wallet</ConnectBtn>
 }
