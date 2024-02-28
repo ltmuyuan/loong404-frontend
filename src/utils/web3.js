@@ -1,8 +1,11 @@
-import SwapABI from "../assets/abi/swap.json";
+import SwapABI from "./abi/ISwap.json";
+import GreatLABI from "./abi/GreatL.json";
+import BabyLABI from "./abi/BabyL.json";
 import { ethers } from "ethers";
-const bigLoongAddress = "0x789244D520e75d6683cCcf82179E6e0E7dD0E6d7"
-const littleLoongAddress = "0x5355b03aA830AC9D171B436C1f620A27C73A5B17"
-const swapAddress = "0x56CC8Ce20606492eE4c96F396577d70A52db8518"
+
+const GreatLoongAddress = "0x512273384A35D749207Db806cF3E1ed89E5613a3"
+const BabyLoongAddress = "0xafA0860737Fa278812e7374681bC83bc1b031F51"
+const swapAddress = "0x936201bc8eecc9F062b938a9B40Ea25133513d99"
 
 export const swap = async (walletProvider, amount, isBig) => {
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
@@ -10,10 +13,26 @@ export const swap = async (walletProvider, amount, isBig) => {
     const contract = new ethers.Contract(swapAddress, SwapABI.abi, signer)
     const value = ethers.parseEther(amount.toString())
     if (isBig) {
-        const tx = await contract.swap(bigLoongAddress, littleLoongAddress, value)
+        const tx = await contract.swap(GreatLoongAddress, BabyLoongAddress, value.toString())
         await tx.wait()
     } else {
-        const tx = await contract.swap(littleLoongAddress, bigLoongAddress, value)
+        const tx = await contract.swap(BabyLoongAddress, GreatLoongAddress, value.toString())
         await tx.wait()
     }
+}
+
+export const getBalanceGreatLoong = async (walletProvider) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(GreatLoongAddress, GreatLABI.abi, signer)
+    const balance = await contract.balanceOf(signer.getAddress())
+    return balance.toString()
+}
+
+export const getBalanceBabyLoong = async (walletProvider) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(BabyLoongAddress, BabyLABI.abi, signer)
+    const balance = await contract.balanceOf(signer.getAddress())
+    return balance.toString()
 }

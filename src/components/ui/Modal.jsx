@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import CloseSvg from '../../assets/close.svg';
 
 const ModalWrapper = styled.div`
   display: ${(props) => (props.isOpen ? 'block' : 'none')};
@@ -15,7 +16,7 @@ const ModalWrapper = styled.div`
 const ModalContent = styled.div`
   background-color: white;
   width: 50%;
-  max-width: 400px;
+  max-width: 680px;
   margin: 100px auto;
   padding: 20px;
 `;
@@ -33,7 +34,7 @@ const CloseButton = styled.span`
   }
 `;
 
-const ModalHeader  = styled.div`
+const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -51,7 +52,9 @@ const Modal = ({ isOpen, onClose, children, title }) => {
       <ModalContent>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
-          <CloseButton onClick={onClose}>&times;</CloseButton>
+          <CloseButton onClick={onClose}>
+            <img src={CloseSvg} alt="close" />
+          </CloseButton>
         </ModalHeader>
         {children}
       </ModalContent>
