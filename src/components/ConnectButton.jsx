@@ -50,6 +50,27 @@ const InviteFriendsRow = styled.div`
     }
 `;
 
+const RewardBox = styled.div`
+    .des {
+        margin-top: 10px;
+        margin-bottom: 30px;
+    }
+    .rewardTitle {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+    .tokens {
+        margin-bottom: 12px;
+        strong {
+            font-size: 32px;
+            font-weight: 700;
+            color: #792E22;
+            margin-right: 4px;
+        }
+    }
+`;
+
 function truncateString(str, maxLength) {
     if (str.length <= maxLength) {
         return str;
@@ -114,6 +135,15 @@ export default function ConnectButton() {
         setPopoverOpen(false)
     }
 
+    const onReward = () => {
+        setIsModalOpenReward(true)
+        setPopoverOpen(false)
+    }
+
+    const onClaim = () => {
+
+    }
+
     useEffect(() => {
         if (address && isModalOpenInvite && inviteCode === 'xxx') {
             inviteCodeInit()
@@ -125,13 +155,12 @@ export default function ConnectButton() {
             <LineBox>
                 <li onClick={() => toAccount()}>Account</li>
                 <li onClick={() => onInvite()}>Invite</li>
-                <li onClick={()=>setIsModalOpenReward(true)}>Reward</li>
+                <li onClick={() => onReward()}>Reward</li>
                 <li onClick={() => disconnectWallet()}>Logout</li>
             </LineBox>
         </>
     );
 
-    // return <ConnectBtn onClick={()=>onClick()}>{btnText}</ConnectBtn>
     return address ? (
         <>
             <Popover placement="bottom" onOpenChange={handleOpenChange} open={popoverOpen} content={content} trigger="click">
@@ -149,11 +178,15 @@ export default function ConnectButton() {
                 </div>
             </Modal>
             <Modal isOpen={isModalOpenReward} onClose={() => setIsModalOpenReward(false)} title="Claim your reward">
-                <div>Earn rewards through various activities like inviting friends to mint NFTs</div>
-                <div><strong>Rewards available:</strong></div>
-                <div><strong>{greatLoong}</strong>Great Loong Tokens</div>
-                <div><strong>{babyLoong}</strong>Baby Loong Tokens</div>
-                <Button>Claim</Button>
+                <RewardBox>
+                    <div className="des">Earn rewards through various activities like inviting friends to mint NFTs</div>
+                    <div className="rewardTitle">Rewards available:</div>
+                    <div className="tokens"><strong>{greatLoong}</strong>Great Loong Tokens</div>
+                    <div className="tokens"><strong>{babyLoong}</strong>Baby Loong Tokens</div>
+                </RewardBox>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                    <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClaim}>Claim</Button>
+                </div>
             </Modal>
         </>
     ) :
