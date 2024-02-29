@@ -13,7 +13,7 @@ const HolidayMusicPlayer = dynamic(() => import("./Music"), { ssr: false });
 // 生成 ID
 const userId = nanoid();
 
-export default function Home() {
+export function Chat() {
   useEffect(() => {
     // 1s 后模拟点击html一下
     setTimeout(() => {
@@ -84,7 +84,7 @@ export default function Home() {
           setChats(chats);
         }}
         request={async (messages: any) => {
-          const response = await fetch("/chat/api/openai", {
+          const response = await fetch("/api/openai", {
             method: "POST",
             body: JSON.stringify({
               messages: messages,
