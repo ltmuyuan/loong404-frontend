@@ -53,7 +53,7 @@ const Modal = ({ isOpen, onClose, children, title }) => {
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
           <CloseButton onClick={onClose}>
-            <img src={CloseSvg} alt="close" />
+            <img src={CloseSvg.src} alt="close" />
           </CloseButton>
         </ModalHeader>
         {children}

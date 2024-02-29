@@ -2,11 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
+import { AppLayout } from "@/components/AppLayout";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AN Universe",
-  description: "AN Universe",
+  title: "LOONG MINT",
+  description: "LOONG MINT",
 };
 
 export const viewport: Viewport = {
@@ -21,13 +23,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
-      {/*<script*/}
-      {/*  dangerouslySetInnerHTML={{*/}
-      {/*    __html: `console.log('Build time: ${process.env.BUILD_TIME}')`,*/}
-      {/*  }}*/}
-      {/*/>*/}
+    <html lang="en" data-test="1">
+      <body className={inter.className}>
+        <AppLayout>
+          {children}
+        </AppLayout>
+      </body>
     </html>
   );
 }

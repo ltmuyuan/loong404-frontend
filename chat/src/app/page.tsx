@@ -1,10 +1,11 @@
 "use client";
-import Page from './chat';
 
-const Index = () => (
-  <>
-    <Page />
-  </>
-);
+import { Home } from "@/components/Home";
 
-export default Index;
+export default function App() {
+  return (
+    <>
+      <Home />
+    </>
+  );
+}
