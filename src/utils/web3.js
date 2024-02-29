@@ -26,6 +26,9 @@ export const swap = async (walletProvider, amount, isGreat) => {
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(swapAddress, SwapABI.abi, signer)
     const value = ethers.parseEther(amount.toString())
+    if (amount == 0) {
+        throw new Error('Amount must be greater than 0')
+    }
     let balance = 0
     if (isGreat) {
         balance = await getBalanceGreatLoong(walletProvider)
