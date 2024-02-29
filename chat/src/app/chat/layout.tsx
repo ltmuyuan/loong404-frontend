@@ -5,8 +5,8 @@ import "../globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AN Universe",
-  description: "AN Universe",
+  title: "LOONG MINT",
+  description: "LOONG MINT",
 };
 
 export const viewport: Viewport = {

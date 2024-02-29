@@ -86,9 +86,9 @@ const TitleBox = styled.div`
 
 const TitleItem = styled.div`
     color: #fff;
-    opacity: ${props => props.isActive ? 1 : 0.6};
+    opacity: ${props => props.$isActive ? 1 : 0.6};
     cursor: pointer;
-    font-size: ${props => props.isActive ? '30px' : '24px'};
+    font-size: ${props => props.$isActive ? '30px' : '24px'};
     font-weight: 700;
 `
 
@@ -492,8 +492,8 @@ function MintLayout({ isBaby }){
             <BtmBox>
                 <LftBox>
                     <TitleBox>
-                        <TitleItem isActive={!isBaby} onClick={() => toGo('/mint/great')}>Great Loong</TitleItem>
-                        <TitleItem isActive={isBaby} onClick={() => toGo('/mint/baby')}>Baby Loong</TitleItem>
+                        <TitleItem $isActive={!isBaby} onClick={() => toGo('/mint/great')}>Great Loong</TitleItem>
+                        <TitleItem $isActive={isBaby} onClick={() => toGo('/mint/baby')}>Baby Loong</TitleItem>
                     </TitleBox>
                     {/* {
                         Number(pro) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>

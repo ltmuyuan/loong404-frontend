@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import CloseSvg from '../../assets/close.svg';
 
 const ModalWrapper = styled.div`
-  display: ${(props) => (props.isOpen ? 'block' : 'none')};
+  display: ${(props) => (props.$isOpen ? 'block' : 'none')};
   position: fixed;
   top: 0;
   left: 0;
@@ -48,7 +48,7 @@ const ModalTitle = styled.h2`
 
 const Modal = ({ isOpen, onClose, children, title }) => {
   return (
-    <ModalWrapper isOpen={isOpen}>
+    <ModalWrapper $isOpen={isOpen}>
       <ModalContent>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
