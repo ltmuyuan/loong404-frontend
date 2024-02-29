@@ -1,0 +1,83 @@
+Arguments: 
+  /home/cmdparkour/.nvm/versions/node/v20.10.0/bin/node /home/cmdparkour/.cache/node/corepack/yarn/1.22.19/bin/yarn.js
+
+PATH: 
+  /home/cmdparkour/.nvm/versions/node/v20.10.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/cmdparkour/Android/Sdk/tools
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  20.10.0
+
+Platform: 
+  linux x64
+
+Trace: 
+  SyntaxError: /home/cmdparkour/.cache/yarn/v6/npm-pino-pretty-10.3.1-e3285a5265211ac6c7cd5988f9e65bf3371a0ca9-integrity/node_modules/pino-pretty/.yarn-metadata.json: Unexpected end of JSON input
+      at JSON.parse (<anonymous>)
+      at /home/cmdparkour/.cache/node/corepack/yarn/1.22.19/lib/cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (/home/cmdparkour/.cache/node/corepack/yarn/1.22.19/lib/cli.js:310:30)
+      at /home/cmdparkour/.cache/node/corepack/yarn/1.22.19/lib/cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "chatgpt-nextjs",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+      "build": "next build",
+      "dev": "next dev",
+      "lint": "next lint",
+      "start": "next start",
+      "postinstall": "patch-package"
+    },
+    "dependencies": {
+      "@ant-design/icons": "^5.3.0",
+      "@ant-design/pro-chat": "^1.2.0",
+      "@ant-design/pro-editor": "^0.38.0",
+      "@fortaine/fetch-event-source": "^3.0.6",
+      "@reduxjs/toolkit": "^2.1.0",
+      "@types/howler": "^2.2.11",
+      "@types/lodash": "^4.14.202",
+      "@types/qrcode": "^1.5.5",
+      "@web3modal/ethers": "^4.0.1",
+      "ahooks": "^3.7.10",
+      "ai": "^2.2.31",
+      "antd": "^5.14.0",
+      "antd-style": "^3.6.1",
+      "axios": "^1.6.7",
+      "bignumber.js": "^9.1.2",
+      "ethers": "^6.11.0",
+      "howler": "^2.2.4",
+      "jimp": "^0.22.10",
+      "next": "14.0.4",
+      "openai": "^4.24.7",
+      "patch-package": "^8.0.0",
+      "pino-pretty": "^10.3.1",
+      "prettier": "^3.2.5",
+      "qrcode": "^1.5.3",
+      "react": "^18.2.0",
+      "react-dom": "^18.2.0",
+      "react-redux": "^9.1.0",
+      "react-router-dom": "^6.22.0",
+      "redux-persist": "^6.0.0",
+      "styled-components": "^6.1.8",
+      "webpack": "^5.90.1"
+    },
+    "devDependencies": {
+      "@types/node": "^20",
+      "@types/react": "^18",
+      "@types/react-dom": "^18",
+      "eslint": "^8",
+      "eslint-config-next": "14.0.4",
+      "typescript": "^5"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
