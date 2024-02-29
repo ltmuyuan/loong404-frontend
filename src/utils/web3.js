@@ -214,3 +214,45 @@ export const claimRewards = async (walletProvider, isGreateL) => {
     const tx = await contract.claim()
     await tx.wait()
 }
+
+/**
+ * free mint
+ * @param {* this is a browser provider ethers can use} walletProvider
+ * @param {* boolean check is or not GreatL} isGreateL
+ */
+export const freeMint = async (walletProvider, isGreateL) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
+    const tx = await contract.freeMint()
+    await tx.wait()
+}
+
+/**
+ * 
+ * @param {* this is a browser provider ethers can use} walletProvider 
+ * @param {* boolean check is or not GreatL} isGreateL 
+ * @param {* num of mint} amount 
+ * @param {* this is a six code you will get from other people, can be empty} inviteCode
+ */
+export const mint = async (walletProvider, isGreateL, amount, inviteCode = "") => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
+    const tx = await contract.mint(amount, inviteCode)
+    await tx.wait()
+}
+
+/**
+ * check Free mint
+ * @param {* this is a browser provider ethers can use} walletProvider
+ * @param {* boolean check is or not GreatL} isGreateL
+ * @returns boolean can or not free mint
+ */
+export const checkFreeMint = async (walletProvider, isGreateL) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
+    const canFreeMint = await contract.checkFree(signer.getAddress())
+    return canFreeMint
+}
