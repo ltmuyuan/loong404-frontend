@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react';
 import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
-import ArrowSvg from '../assets/arrow.svg';
-import { swap } from "../utils/web3";
+import ArrowSvg from '@/assets/arrow.svg';
+import { swap } from "@/utils/web3";
 
 const Box = styled.div`
     background: #fdfaf1;
@@ -191,7 +191,7 @@ const TokenSwap = () => {
                 </div>
                 <img
                     className="tip"
-                    src={ArrowSvg}
+                    src={ArrowSvg.src}
                 />
                 <div className="item">
                     <div className="label">You Get</div>
