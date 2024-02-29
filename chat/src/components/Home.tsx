@@ -1,13 +1,14 @@
 import styled from "styled-components";
-import BgImg from "../assets/home-bg.jpg";
-// import LogoImg from "../assets/demo/logo.svg";
-// import LftImg from "../assets/demo/left-bottom.png";
-// import RhtImg from "../assets/demo/right-bottom.png";
-import { useNavigate } from "react-router-dom";
-import HomeLogo from "../assets/logoHome.png"
-import TokenSwap from "../components/tokenswap";
+import BgImg from "@/assets/home-bg.jpg";
+// import LogoImg from "@/assets/demo/logo.svg";
+// import LftImg from "@/assets/demo/left-bottom.png";
+// import RhtImg from "@/assets/demo/right-bottom.png";
+// import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation"
+import HomeLogo from "@/assets/logoHome.png"
+import TokenSwap from "@/components/tokenswap";
 import {Divider, Flex} from "antd";
-import ConnectButton from "../components/ConnectButton";
+import ConnectButton from "@/components/ConnectButton";
 
 const BgBox = styled.div`
     width: 100%;
@@ -204,16 +205,17 @@ const BtnRht = styled.div`
 
 
 
-export default function Home() {
-    const navigate = useNavigate()
+export function Home() {
+    // const navigate = useNavigate()
+    const navigate = useRouter().push
 
-    const toGo = (url) => {
+    const toGo = (url: string) => {
         navigate(url)
     }
 
     return <BgBox>
         <LogoBox onClick={()=>toGo("/")}>
-            <img src={HomeLogo} alt=""/>
+            <img src={HomeLogo.src} alt=""/>
             {/*AILOONG*/}
         </LogoBox>
         <ConnectBox>
@@ -221,7 +223,7 @@ export default function Home() {
         </ConnectBox>
         <InnerBox>
             <InnerBoxContent>
-                <img src={BgImg} alt="" className="bg"/>
+                <img src={BgImg.src} alt="" className="bg"/>
             </InnerBoxContent>
             <FloatBox>
                 <RhtBox>

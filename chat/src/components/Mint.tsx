@@ -1,34 +1,37 @@
 import styled from "styled-components";
-import DemoImg from "../assets/demo.jpg";
-import TwitterImg from "../assets/demo/twitter.png";
-import GlobalImg from "../assets/demo/global.png";
-import LftImg from "../assets/demo/minus.png";
-import RhtImg from "../assets/demo/plus.png";
-import BgImg from "../assets/demo/bg.png";
-import ConnectButton from "../components/ConnectButton.jsx";
+import DemoImg from "@/assets/demo.jpg";
+import TwitterImg from "@/assets/demo/twitter.png";
+import GlobalImg from "@/assets/demo/global.png";
+import LftImg from "@/assets/demo/minus.png";
+import RhtImg from "@/assets/demo/plus.png";
+import BgImg from "@/assets/demo/bg.png";
+import ConnectButton from "@/components/ConnectButton.jsx";
 import {useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
 import {useWeb3ModalProvider} from "@web3modal/ethers/react";
-import {Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
+// import {Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
+
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation"
 import {useEffect, useState} from "react";
-import abi from '../assets/abi/loong-abi.json'
+import abi from '@/assets/abi/loong-abi.json'
 import {BrowserProvider, Contract, ethers, JsonRpcProvider} from "ethers";
-import {chain, contractAddress} from "../common/config.js";
-import Loading from "../components/loading.jsx";
+import {chain, contractAddress} from "@/common/config.js";
+import Loading from "@/components/loading";
 import {useSelector} from "react-redux";
 import { Input, notification } from 'antd';
-import store from "../store/index.js";
-import {saveLoading} from "../store/reducer.js";
+import store from "@/store/index.js";
+import {saveLoading} from "@/store/reducer.js";
 import BigNumber from "bignumber.js";
-import LogoMint from "../assets/logoMint.png";
-import Modal from "../components/ui/Modal";
-import Button from "../components/ui/Button.jsx";
+import LogoMint from "@/assets/logoMint.png";
+import Modal from "@/components/ui/Modal";
+import Button from "@/components/ui/Button";
 
 // #region Css
 const Layout = styled.div`
 
     width: 100%;
     min-height: 100vh;
-    background:#070404 url(${BgImg});
+    background:#070404 url(${BgImg.src});
     background-size: cover;
 `
 const MainBox = styled.div`
@@ -86,7 +89,7 @@ const TitleBox = styled.div`
 
 const TitleItem = styled.div`
     color: #fff;
-    opacity: ${props => props.$isActive ? 1 : 0.6};
+    opacity: ${props => (props.$isActive ? 1 : 0.6)};
     cursor: pointer;
     font-size: ${props => props.$isActive ? '30px' : '24px'};
     font-weight: 700;
@@ -274,20 +277,13 @@ const MINT_TYPE_FREE = '2'
 const MINT_TYPE_NORMAL = '1'
 const  Unit = 600000;
 
-export function MintGreat() {
-    return <MintLayout isBaby={false} />
-}
-
-export function MintBaby() {
-    return <MintLayout isBaby={true} />
-}
-
-function MintLayout({ isBaby }){
+export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const { address, chainId,  isConnected } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
     const [count, setCount] = useState(0)
-    const navigate = useNavigate()
-    const [searchParams] = useSearchParams();
+    // const navigate = useNavigate()
+    const navigate = useRouter().push
+    const searchParams = useSearchParams();
     const [mintType, setMintType] = useState(null)
     const [minted, setMinted] = useState('')
     const [total, setTotal] = useState('')
@@ -483,7 +479,7 @@ function MintLayout({ isBaby }){
         <MainBox>
             <FirstLine>
                 <LogoBox onClick={()=>toGo("/")}>
-                    <img src={LogoMint} alt=""/>
+                    <img src={LogoMint.src} alt=""/>
                     {/*AILOONG*/}
                 </LogoBox>
                 {/*<img src={Logo} alt="" onClick={()=>toGo("/")}/>*/}
@@ -534,11 +530,11 @@ function MintLayout({ isBaby }){
                         <p>Embrace the spirit of the mysterious gnosis AI, claim your AILoong, and make your mark in the new era of AI digital collectibles.</p>
                     </ArticleBox>
                     <SocialBox>
-                        <Link to="/">
-                            <img src={GlobalImg} alt=""/>
+                        <Link href="/">
+                            <img src={GlobalImg.src} alt=""/>
                         </Link>
-                        <Link to="https://twitter.com/AIloongglobal" target="_blank" >
-                            <img src={TwitterImg} alt=""/>
+                        <Link href="https://twitter.com/AIloongglobal" target="_blank" >
+                            <img src={TwitterImg.src} alt=""/>
                         </Link>
 
                     </SocialBox>
@@ -549,15 +545,15 @@ function MintLayout({ isBaby }){
                 </LftBox>
                 <RhtBox>
                     <PhotoBox>
-                        {isBaby ? <img src={''} alt="Baby Loong Picture"/> : <img src={DemoImg} alt="Great Loong Picture"/>}
+                        {isBaby ? <img src={''} alt="Baby Loong Picture"/> : <img src={DemoImg.src} alt="Great Loong Picture"/>}
                     </PhotoBox>
                     {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
                         <FlexLine>
                             <div>Price: {price} ETH</div>
                             <RhtInput>
-                                <img src={LftImg} alt="" onClick={()=>step('plus')}/>
+                                <img src={LftImg.src} alt="" onClick={()=>step('plus')}/>
                                 <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
-                                <img src={RhtImg} alt=""  onClick={()=>step('add')}/>
+                                <img src={RhtImg.src} alt=""  onClick={()=>step('add')}/>
                             </RhtInput>
                         </FlexLine>
                     </RhtBtmBox>}

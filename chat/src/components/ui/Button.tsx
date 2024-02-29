@@ -15,7 +15,7 @@ const StyledButton = styled.button`
   }
 `;
 
-const Button = ({ children, onClick, style }) => {
+const Button = ({ children, onClick, style }: { children: React.ReactNode; onClick?: () => {}; style?: React.HTMLAttributes<HTMLButtonElement>["style"] }) => {
   return <StyledButton onClick={onClick} style={style}>{children}</StyledButton>;
 };
 

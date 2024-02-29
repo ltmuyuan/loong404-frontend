@@ -197,7 +197,7 @@ export default function ConnectButton() {
                 <InviteFriendsRow onClick={onCopy}>
                     <div>Invite Code:</div>
                     <div className="code">{inviteCode}</div>
-                    <img src={CopySvg} alt="copy" title="copy" />
+                    <img src={CopySvg.src} alt="copy" title="copy" />
                 </InviteFriendsRow>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                     <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClose}>Done</Button>
