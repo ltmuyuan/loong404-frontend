@@ -87,7 +87,10 @@ const TitleBox = styled.div`
     gap: 30px;
 `
 
-const TitleItem = styled.div`
+interface TitleItemProps {
+    $isActive: boolean;
+}
+const TitleItem = styled.div<TitleItemProps>`
     color: #fff;
     opacity: ${props => (props.$isActive ? 1 : 0.6)};
     cursor: pointer;
@@ -95,7 +98,10 @@ const TitleItem = styled.div`
     font-weight: 700;
 `
 
-const ProBox = styled.div`
+interface ProBoxProps {
+    width: number;
+}
+const ProBox = styled.div<ProBoxProps>`
     display: flex;
     flex-direction: column;
     flex-grow: 1;
@@ -284,7 +290,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     // const navigate = useNavigate()
     const navigate = useRouter().push
     const searchParams = useSearchParams();
-    const [mintType, setMintType] = useState(null)
+    const [mintType, setMintType] = useState<null | '1' | '2'>(null)
     const [minted, setMinted] = useState('')
     const [total, setTotal] = useState('')
     const [price, setPrice] = useState('')
@@ -292,7 +298,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [limitMint, setLimitMint] = useState('0')
     const [normalMintRemain, setNormalMintRemain] = useState(0)
     const { open } = useWeb3Modal();
-    const loading = useSelector(store => store.loading);
+    const loading = useSelector<{ loading: boolean }, boolean>(store => store.loading);
     const [api, contextHolder] = notification.useNotification();
     const [pro,setPro] = useState(0);
     const [refresh, setRefresh] = useState(0)
@@ -301,7 +307,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
 
     useEffect(() => {
         setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
-        setInviteCode(searchParams.get('inviteCode'));
+        setInviteCode(searchParams.get('inviteCode') || '');
     }, [searchParams])
 
     useEffect(()=> {
@@ -325,7 +331,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                 const result = MintedBN.dividedBy(totalAfter);
                 const percentage = result.times(100).toString();
                 const per = Number(percentage).toFixed(2)
-                setPro(per)
+                setPro(Number(per))
 
             } catch (e) {
                 console.error(e)
@@ -379,11 +385,11 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         })()
     }, [address, walletProvider, chainId, refresh])
 
-    const toGo = (url) =>{
+    const toGo = (url: string) =>{
         navigate(url)
     }
 
-    const onCountChanged = (e) => {
+    const onCountChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (Number(normalMintRemain) <=0) {
             setCount(0)
             return;
@@ -394,11 +400,11 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         } else if (Number(v) > Number(normalMintRemain)) {
             setCount(Number(normalMintRemain))
         } else {
-            setCount(v)
+            setCount(Number(v))
         }
     }
 
-    const step = (type) => {
+    const step = (type: string) => {
         // console.log("step", count, limitMemberMint)
         if (Number(normalMintRemain) <=0) {
             setCount(0)
@@ -417,6 +423,9 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     }
 
     const normalMint = async () => {
+        if (!walletProvider) {
+            return;
+        }
         if (Number(count) <= 0) {
             api.error({
                 message: 'You have exceeded the mint limit',
@@ -437,13 +446,15 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             });
         } catch (e) {
             console.error(e)
-            api.error({message: e.toString()})
+            api.error({message: (e as Error).toString()})
         }
         store.dispatch(saveLoading(false))
     }
 
     const freeMint = async () => {
-
+        if (!walletProvider) {
+            return;
+        }
         store.dispatch(saveLoading(true))
         const provider = new BrowserProvider(walletProvider);
         try {
@@ -458,12 +469,12 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             });
         } catch (e) {
             console.error(e)
-            api.error({message: e.toString()})
+            api.error({message: (e as Error).toString()})
         }
         store.dispatch(saveLoading(false))
     }
 
-     const  addCommasToNumber =(number) =>{
+     const  addCommasToNumber =(number: string) =>{
         let numbB = Number(number)
          return numbB?.toLocaleString('en-US');
 
