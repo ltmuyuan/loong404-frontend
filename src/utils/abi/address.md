@@ -1,12 +1,12 @@
 
 | 测试环境 OP Sepolia Testnet     | address                                         |
 |-----------------------------|-------------------------------------------------|
-| greatLAddr(大龙token)         | 0x512273384A35D749207Db806cF3E1ed89E5613a3      |
-| greatLMintAddr(大龙mint addr) | 0xE20e2EdBb15635c9913ac10D91c717018a82fc71      |
-| babyLAddr(小龙token)          | 0xafA0860737Fa278812e7374681bC83bc1b031F51      |
-| babyLMintAddr(小龙mint addr)  | 0x376fB81695D3CA27F0A4324f7EbEE2980Fabd785      |
-| swapAddress                 | 0x936201bc8eecc9F062b938a9B40Ea25133513d99      |
-| dataAddress                 | 0x9514C7DB087458fE82F1f93cFe4229EB38d88F38      |
+| greatLAddr(大龙token)         | 0xec8DF505661c0d5845Bd3D3F3a4180Eade2ACA32      |
+| greatLMintAddr(大龙mint addr) | 0xc77dF1E6D4351f8aBa98722f66c481dd236F8885      |
+| babyLAddr(小龙token)          | 0x89426d1e7D8Cc62d89eA543E696ee589DA3722E0      |
+| babyLMintAddr(小龙mint addr)  | 0x799d5050fa3dd87ef31b4Baa918A631A2521CFF4      |
+| swapAddress                 | 0x7D15890177D88a38778702643CAb414cd387Bc40      |
+| dataAddress                 | 0x46096ca702716ea68e7fb1A30679fa1B263d7e77      |
 
 1. 大小龙mint的时候用(greatLMintAddr，babyLMintAddr):
   - freeMint()：free mint
@@ -16,6 +16,8 @@
   - claim(): claim邀请奖励
   - checkFree(address addr): 校验钱包是否可以免费mint 参数:账户地址 返回值:(true:可以free mint,false: 不可free mint)
   - limitMintMap(address addr) 查询已经mint的个数 参数:账户地址 返回值：mint的个数
+  - getOwned(address addr)获取地址拥有的nft id
+  - tokenURI(uint256 id) 获取图片地址
 
 2. dataStorage(dataAddress):
   - generateInviteCode(string memory _inviteCode)：生成邀请码 参数：（邀请码）（需要前端生成6位邀请码传到参数中）
