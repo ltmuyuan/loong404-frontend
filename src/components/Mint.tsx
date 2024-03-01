@@ -287,6 +287,7 @@ const TipBox = styled.div`
 const MAX_COUNT = 5;
 const MINT_TYPE_FREE = '2'
 const MINT_TYPE_NORMAL = '1'
+const MINT_TYPE_CONNECT = "3"
 const Unit = 600000;
 
 export function MintLayout({ isBaby }: { isBaby: boolean }) {
@@ -412,9 +413,9 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                     setMintType(MINT_TYPE_NORMAL)
                 })
         } else {
-            setMintType(null)
+            setMintType(MINT_TYPE_CONNECT)
         }
-    }, [address, refresh])
+    }, [address, chainId, refresh])
 
     const percent = getPercent(minted, total)
 
@@ -491,7 +492,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
 
                     {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint</MintBtn>}
                     {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint(true)}>Mint</MintBtn>}
-                    {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
+                    {mintType === MINT_TYPE_CONNECT && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
 
                 </RhtBox>
             </BtmBox>
