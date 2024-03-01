@@ -308,6 +308,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
     const normalMintRemain = total - minted;
+    const singleMintMax = isBaby ? 50 : 5;
 
     useEffect(() => {
         setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
@@ -328,6 +329,8 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             setCount(1)
         } else if (Number(v) > Number(normalMintRemain)) {
             setCount(Number(normalMintRemain))
+        } else if (Number(v) > singleMintMax) {
+            setCount(singleMintMax)
         } else {
             setCount(Number(v))
         }
@@ -340,7 +343,13 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             return;
         }
         if (type === 'add') {
-            Number(count) < Number(normalMintRemain) ? setCount(count + 1) : setCount(Number(normalMintRemain))
+            if (Number(count) >= Number(normalMintRemain)) {
+                setCount(Number(normalMintRemain))
+            } else if (Number(count) >= singleMintMax) {
+                setCount(singleMintMax)
+            } else {
+                setCount(count + 1)
+            }
         }
         if (type === 'plus') {
             Number(count) > 1 ? setCount(count - 1) : setCount(1)
@@ -473,7 +482,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                             <div>Price: {price} ETH</div>
                             <RhtInput>
                                 <img src={LftImg.src} alt="" onClick={() => step('plus')} />
-                                <input type="number" min={0} step={1} value={count} onChange={onCountChanged} />
+                                <input type="number" min={0} step={10} max={isBaby ? 50 : 5} value={count} onChange={onCountChanged} />
                                 <img src={RhtImg.src} alt="" onClick={() => step('add')} />
                             </RhtInput>
                         </FlexLine>

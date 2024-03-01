@@ -139,7 +139,7 @@ export function Chat() {
           setChats(chats);
         }}
         request={async (messages: any) => {
-          const response = await fetch("/api/openai", {
+          const response = await fetch("/chat/api/openai", {
             method: "POST",
             body: JSON.stringify({
               messages: messages,
