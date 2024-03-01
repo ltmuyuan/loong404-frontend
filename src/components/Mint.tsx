@@ -358,14 +358,11 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     }
 
     const normalMint = async (showModal: boolean) => {
-        // check if the user has entered the number of mint
-        if (count <= 0) {
-            message.info('Please enter the number of mint')
-            return;
-        }
         // show invite code modal
         if (showModal) {
-            setIsModalOpenImport(true)
+            if (inviteCode) {
+                setIsModalOpenImport(true)
+            }
             return;
         }
         store.dispatch(saveLoading(true))
