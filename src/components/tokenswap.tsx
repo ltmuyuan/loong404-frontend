@@ -4,7 +4,7 @@ import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3mo
 import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
 import ArrowSvg from '../assets/arrow.svg';
-import { getBalanceBabyLoong, getBalanceGreatLoong, swap } from "../utils/web3";
+import { swap, getSwapCommission } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 
@@ -108,7 +108,8 @@ const Box = styled.div`
     }
 `
 
-const Btn = styled.div`
+const Btn = styled.button`
+    border: 0;
     background: #792E22;
     height: 60px;
     width: 601px;
@@ -124,6 +125,12 @@ const Btn = styled.div`
     @media (max-width: 1100px) {
         width: 100%;
     }
+    .tips {
+        font-size: 12px;
+        margin-left: 12px;
+        opacity: 0.6;
+        margin-top: 6px;
+    }
 `
 
 const options = [
@@ -133,16 +140,13 @@ const options = [
 
 const TokenSwap = () => {
     const { open } = useWeb3Modal()
-    const { address, chainId } = useWeb3ModalAccount()
+    const { address } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
-    const [balance, setBalance] = useState<any>({
-        greatLoong: null,
-        babyLoong: null,
-    })
     const [firstValue, setFirstValue] = useState(1)
     const [secondValue, setSecondValue] = useState(2)
     const [firstInput, setFirstInput] = useState(0)
     const [secondInput, setSecondInput] = useState(0)
+    const [commission, setCommission] = useState(5 / 1000)
 
     /** select change */
     const onFirstChange = (value: any) => {
@@ -159,7 +163,7 @@ const TokenSwap = () => {
     /** input change */
     const onInputChange = (value: any) => {
         setFirstInput(value)
-        setSecondInput(value)
+        setSecondInput(value * (1 - commission))
     }
 
     const onBtnClick = async () => {
@@ -179,26 +183,20 @@ const TokenSwap = () => {
         }
     }
 
-    const getBalance = async () => {
-        const [greatLoong, babyLoong] = await Promise.all([
-            getBalanceGreatLoong(walletProvider),
-            getBalanceBabyLoong(walletProvider),
-        ])
-        setBalance({
-            greatLoong,
-            babyLoong,
-        })
-    }
-
     useEffect(() => {
-        getBalance()
-        const timer = setInterval(() => {
-            getBalance()
-        }, 5000)
-        return () => {
-            clearInterval(timer)
+        if (!!commission) {
+            return;
         }
-    }, [address, chainId])
+        getSwapCommission(walletProvider)
+            .then(commission => {
+                setCommission(commission / 1000);
+            })
+            .catch(e => {
+                // message.error('Get commission failed');
+                console.error(e);
+                setCommission(5 / 1000);
+            })
+    }, [walletProvider, commission, setCommission]);
 
     return (
         <Box>
@@ -206,7 +204,7 @@ const TokenSwap = () => {
             <div className="des">The official provides a 1:1 trading pool for Great Loong-Baby Loong tokens. The pool is locked, ensuring the upper limit of the number of Great Loong and Baby Loong NFTs and the upper limit of 404 token circulation.</div>
             <div className="form">
                 <div className="item">
-                    <div className="label">{firstValue === 1 ? balance.greatLoong : balance.babyLoong}</div>
+                    <div className="label">You Pay</div>
                     <div className="value">
                         <InputNumber
                             controls={false}
@@ -225,7 +223,7 @@ const TokenSwap = () => {
                     src={ArrowSvg.src}
                 />
                 <div className="item">
-                    <div className="label">{firstValue === 2 ? balance.greatLoong : balance.babyLoong}</div>
+                    <div className="label">You Get</div>
                     <div className="value">
                         <InputNumber
                             controls={false}
@@ -239,7 +237,7 @@ const TokenSwap = () => {
                         />
                     </div>
                 </div>
-                <Btn onClick={onBtnClick}>{ !address ? "Connect Wallet" : "Swap" }</Btn>
+                <Btn onClick={onBtnClick} disabled={!!commission}>{ !address ? "Connect Wallet" : commission ? <>Swap<span className="tips">(手续费：{commission * 100}%)</span></> : "Swap" }</Btn>
             </div>
         </Box>
     );
