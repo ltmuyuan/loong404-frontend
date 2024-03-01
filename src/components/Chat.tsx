@@ -6,9 +6,50 @@ import { useRouter } from "next/navigation";
 import debounce from "lodash/debounce";
 import { ChatMessage } from "@ant-design/pro-chat/es/types/message";
 import dynamic from "next/dynamic"; // 生成 ID
+import ChatBg from "@/assets/chat-bg.jpg";
+import ConnectButton from "./ConnectButton";
+import styled from "styled-components";
+import HomeLogo from "@/assets/logoHome.png"
+import Link from "next/link";
 
 const ProChat = dynamic(() => import("./ProChat"), { ssr: false });
 const HolidayMusicPlayer = dynamic(() => import("./Music"), { ssr: false });
+
+
+const LogoBox = styled.div`
+    position: absolute;
+    left: 40px;
+    top: 40px;
+    z-index: 99;
+    cursor: pointer;
+    width: 200px;
+    //background: #83271c;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    height: 40px;
+    font-size: 23px;
+    border-radius: 10px;
+    img{width: 100%;}
+    @media (max-width: 1100px) {
+        left: 5vw;
+        top: 5vw;
+        width: 145px;
+    }
+`
+
+const ConnectBox = styled.div`
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  z-index: 999;
+  @media (max-width: 1100px) {
+      right: 5vw;
+      top: 5vw;
+  }
+`;
 
 // 生成 ID
 const userId = nanoid();
@@ -42,21 +83,35 @@ export function Chat() {
     <div
       style={{
         // backgroundColor: theme.colorBgLayout,
-        backgroundImage:
-          "url('https://oss.anuniverse.com/public/background.jpg')",
+        // backgroundImage:
+        //   "url('https://oss.anuniverse.com/public/background.jpg')",
+        backgroundImage: `url(${ChatBg.src})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
+        paddingTop: "90px",
+        width: "100vw",
+        height: "100vh",
       }}
     >
+      <LogoBox>
+        <Link href="/">
+          <img src={HomeLogo.src} alt=""/>
+        </Link>
+      </LogoBox>
+      <ConnectBox>
+        <ConnectButton />
+      </ConnectBox>
       {/*<HolidayMusicPlayer*/}
       {/*  src={"https://oss.anuniverse.com/public/257893594.mp3"}*/}
       {/*/>*/}
       <ProChat
         chats={chats}
         style={{
-          height: "100vh",
-          width: "100vw",
+          height: "100%",
+          width: "100%",
+          position: "relative",
+          zIndex: 1
         }}
         helloMessage={
           "2024，财神到你家！帮你算算新的一年你能赚多少钱。告诉财神爷你叫什么名字吧"

@@ -388,7 +388,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             message.success('Free Mint success')
         } catch (e) {
             console.log(e)
-            const msg = e.message ? `Mint failed: ${e.message.split('[')[0].split('(')[0]}` : 'Mint failed'
+            const msg = (e as Error).message ? `Mint failed: ${(e as Error).message.split('[')[0]?.split('(')?.[0]}` : 'Mint failed'
             message.error(msg)
             store.dispatch(saveLoading(false))
         }
