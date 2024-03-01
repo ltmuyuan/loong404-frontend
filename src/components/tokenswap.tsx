@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react';
 import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
 import ArrowSvg from '../assets/arrow.svg';
-import { swap } from "../utils/web3";
+import { getBalanceBabyLoong, getBalanceGreatLoong, swap } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 
@@ -133,8 +133,12 @@ const options = [
 
 const TokenSwap = () => {
     const { open } = useWeb3Modal()
-    const { address } = useWeb3ModalAccount()
+    const { address, chainId } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
+    const [balance, setBalance] = useState<any>({
+        greatLoong: null,
+        babyLoong: null,
+    })
     const [firstValue, setFirstValue] = useState(1)
     const [secondValue, setSecondValue] = useState(2)
     const [firstInput, setFirstInput] = useState(0)
@@ -174,13 +178,35 @@ const TokenSwap = () => {
             store.dispatch(saveLoading(false))
         }
     }
+
+    const getBalance = async () => {
+        const [greatLoong, babyLoong] = await Promise.all([
+            getBalanceGreatLoong(walletProvider),
+            getBalanceBabyLoong(walletProvider),
+        ])
+        setBalance({
+            greatLoong,
+            babyLoong,
+        })
+    }
+
+    useEffect(() => {
+        getBalance()
+        const timer = setInterval(() => {
+            getBalance()
+        }, 5000)
+        return () => {
+            clearInterval(timer)
+        }
+    }, [address, chainId])
+
     return (
         <Box>
             <h2 className="title">Tokens Swap</h2>
             <div className="des">The official provides a 1:1 trading pool for Great Loong-Baby Loong tokens. The pool is locked, ensuring the upper limit of the number of Great Loong and Baby Loong NFTs and the upper limit of 404 token circulation.</div>
             <div className="form">
                 <div className="item">
-                    <div className="label">You Pay</div>
+                    <div className="label">{firstValue === 1 ? balance.greatLoong : balance.babyLoong}</div>
                     <div className="value">
                         <InputNumber
                             controls={false}
@@ -199,7 +225,7 @@ const TokenSwap = () => {
                     src={ArrowSvg.src}
                 />
                 <div className="item">
-                    <div className="label">You Get</div>
+                    <div className="label">{firstValue === 2 ? balance.greatLoong : balance.babyLoong}</div>
                     <div className="value">
                         <InputNumber
                             controls={false}
