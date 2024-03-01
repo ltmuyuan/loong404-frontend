@@ -124,7 +124,14 @@ export default function ConnectButton() {
     const inviteCodeInit = async () => {
         let code = await getInviteCode(walletProvider)
         if (!code) {
-            code = await generateInviteCode(walletProvider)
+            try {
+                message.info('Generating invite code first')
+                store.dispatch(saveLoading(true))
+                code = await generateInviteCode(walletProvider)
+            } catch (e: any) {
+
+            }
+            store.dispatch(saveLoading(false))
         }
         setInviteCode(code)
     }
@@ -170,7 +177,7 @@ export default function ConnectButton() {
     }
 
     useEffect(() => {
-        if (address && isModalOpenInvite && inviteCode === 'xxx') {
+        if (address && isModalOpenInvite) {
             inviteCodeInit()
         }
     }, [address, isModalOpenInvite])

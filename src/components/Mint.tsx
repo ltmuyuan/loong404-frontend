@@ -309,7 +309,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
     const normalMintRemain = total - minted;
-    const singleMintMax = isBaby ? 50 : 5;
+    const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
         setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
@@ -328,8 +328,6 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         let v = e.target.value;
         if (Number(v) <= 0) {
             setCount(1)
-        } else if (Number(v) > Number(normalMintRemain)) {
-            setCount(Number(normalMintRemain))
         } else if (Number(v) > singleMintMax) {
             setCount(singleMintMax)
         } else {
@@ -344,9 +342,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             return;
         }
         if (type === 'add') {
-            if (Number(count) >= Number(normalMintRemain)) {
-                setCount(Number(normalMintRemain))
-            } else if (Number(count) >= singleMintMax) {
+            if (Number(count) >= singleMintMax) {
                 setCount(singleMintMax)
             } else {
                 setCount(count + 1)
@@ -362,14 +358,11 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     }
 
     const normalMint = async (showModal: boolean) => {
-        // check if the user has entered the number of mint
-        if (count <= 0) {
-            message.info('Please enter the number of mint')
-            return;
-        }
         // show invite code modal
         if (showModal) {
-            setIsModalOpenImport(true)
+            if (inviteCode) {
+                setIsModalOpenImport(true)
+            }
             return;
         }
         store.dispatch(saveLoading(true))
@@ -478,9 +471,9 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                     <PhotoBox>
                         {isBaby ? <img src={BabyLImg.src} alt="Baby Loong Picture" /> : <img src={GreatLImg.src} alt="Great Loong Picture" />}
                     </PhotoBox>
-                    {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
+                    {mintType === MINT_TYPE_FREE && <RhtBtmBox>
                         <FlexLine>
-                            <div>Price: {price} ETH</div>
+                            <div>Price: {count * Number(price)} ETH</div>
                             <RhtInput>
                                 <img src={LftImg.src} alt="" onClick={() => step('plus')} />
                                 <input type="number" min={0} step={1} max={singleMintMax} value={count} onChange={onCountChanged} />
