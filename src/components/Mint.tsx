@@ -200,8 +200,6 @@ const RhtInput = styled.div`
     justify-content: space-between;
     background: rgba(255,255,255,0.1);
     border-radius: 4px;
-    width: 128px;
-    height: 27px;
     padding: 8px 10px;
     img{
         width: 25px;
@@ -310,6 +308,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
     const normalMintRemain = total - minted;
+    const singleMintMax = isBaby ? 50 : 5;
 
     useEffect(() => {
         setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
@@ -330,6 +329,8 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             setCount(1)
         } else if (Number(v) > Number(normalMintRemain)) {
             setCount(Number(normalMintRemain))
+        } else if (Number(v) > singleMintMax) {
+            setCount(singleMintMax)
         } else {
             setCount(Number(v))
         }
@@ -342,7 +343,13 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             return;
         }
         if (type === 'add') {
-            Number(count) < Number(normalMintRemain) ? setCount(count + 1) : setCount(Number(normalMintRemain))
+            if (Number(count) >= Number(normalMintRemain)) {
+                setCount(Number(normalMintRemain))
+            } else if (Number(count) >= singleMintMax) {
+                setCount(singleMintMax)
+            } else {
+                setCount(count + 1)
+            }
         }
         if (type === 'plus') {
             Number(count) > 1 ? setCount(count - 1) : setCount(1)
@@ -431,23 +438,15 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                         <TitleItem $isActive={!isBaby} onClick={() => toGo('/mint/great')}>Great Loong</TitleItem>
                         <TitleItem $isActive={isBaby} onClick={() => toGo('/mint/baby')}>Baby Loong</TitleItem>
                     </TitleBox>
-                    {
-                        Number(percent) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
-                    }
-                    {
-                        Number(percent) > 25 && Number(percent) <= 50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
-                    }
-                    {
-                        Number(percent) > 50 && <ProBox width={percent}>
-                            <div className="top">
-                                <div>TOTAL MINTED</div>
-                                <div>{percent}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
-                            </div>
-                            <div className="proOuter">
-                                <div className="proInner" />
-                            </div>
-                        </ProBox>
-                    }
+                    <ProBox width={percent}>
+                        <div className="top">
+                            <div>TOTAL MINTED</div>
+                            <div>{percent}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
+                        </div>
+                        <div className="proOuter">
+                            <div className="proInner" />
+                        </div>
+                    </ProBox>
 
                     <ArticleBox>
                         {
@@ -483,7 +482,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                             <div>Price: {price} ETH</div>
                             <RhtInput>
                                 <img src={LftImg.src} alt="" onClick={() => step('plus')} />
-                                <input type="number" min={0} step={1} value={count} onChange={onCountChanged} />
+                                <input type="number" min={0} step={1} max={singleMintMax} value={count} onChange={onCountChanged} />
                                 <img src={RhtImg.src} alt="" onClick={() => step('add')} />
                             </RhtInput>
                         </FlexLine>
