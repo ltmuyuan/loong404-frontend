@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import debounce from "lodash/debounce";
 import { ChatMessage } from "@ant-design/pro-chat/es/types/message";
 import dynamic from "next/dynamic"; // 生成 ID
-import ChatBg from "@/assets/chat-bg.jpg";
+import RisingBg from "@/assets/rising-bg.jpg";
 import ConnectButton from "./ConnectButton";
 import styled from "styled-components";
 import HomeLogo from "@/assets/logoHome.png"
@@ -85,7 +85,7 @@ export function Chat() {
         // backgroundColor: theme.colorBgLayout,
         // backgroundImage:
         //   "url('https://oss.anuniverse.com/public/background.jpg')",
-        backgroundImage: `url(${ChatBg.src})`,
+        backgroundImage: `url(${RisingBg.src})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
@@ -114,7 +114,7 @@ export function Chat() {
           zIndex: 1
         }}
         helloMessage={
-          "2024，财神到你家！帮你算算新的一年你能赚多少钱。告诉财神爷你叫什么名字吧"
+          "神龙精灵保佑你赚大钱！2024年运气如何？让神秘的东方玄学给你分析一下吧！"
         }
         onChatsChange={(chats: any) => {
           const lastChat = chats[chats.length - 1];

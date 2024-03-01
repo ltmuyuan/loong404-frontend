@@ -8,6 +8,7 @@ import CopySvg from '../assets/copy.svg';
 import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
+import { chain } from '@/common/config';
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -90,7 +91,7 @@ export default function ConnectButton() {
     const { walletProvider } = useWeb3ModalProvider()
     const [isModalOpenInvite, setIsModalOpenInvite] = useState(false)
     const [isModalOpenReward, setIsModalOpenReward] = useState(false)
-    const [inviteCode, setInviteCode] = useState('xxx')
+    const [inviteCode, setInviteCode] = useState('')
     const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
 
     const onClick = () => {
@@ -109,7 +110,7 @@ export default function ConnectButton() {
 
     const toAccount = () => {
         setPopoverOpen(false)
-        window.open(`https://etherscan.io/address/${address}`, '_blank')
+        window.open(`${chain.explorerUrl}address/${address}`, '_blank')
     }
 
     const onCopy = () => {

@@ -10,6 +10,19 @@ import { message } from "antd";
 const { GreatLoongAddress, BabyLoongAddress, swapAddress, dataAddress, greatLMintAddr, babyLMintAddr } = chain.contract;
 
 /**
+ * Swap commission
+ * @param {* this is a browser provider ethers can use} walletProvider 
+ * @param {* this is a number or string you need to swap} amount 
+ * @param {* boolean check is or not Great to Baby} isGreat 
+ */
+export const getSwapCommission = async(walletProvider) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = ethersProvider.getSigner()
+    const contract = new ethers.Contract(swapAddress, SwapABI.abi, signer)
+    return contract.commission()
+}
+
+/**
  * Swap tokens
  * @param {* this is a browser provider ethers can use} walletProvider 
  * @param {* this is a number or string you need to swap} amount 
