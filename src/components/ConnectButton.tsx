@@ -31,9 +31,7 @@ const LineBox = styled.ul`
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        color: #Fff;
         a{
-            color: #Fff;
         }
     }
 `

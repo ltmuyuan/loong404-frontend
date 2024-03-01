@@ -35,11 +35,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <ConfigProvider
             theme={{
                 token: {
-                    colorText:"#fff",
-                    colorIcon:"rgba(255,255,255,0.8)",
-                    colorError:"#ff4d4f",
-                    colorSuccess:"#52c41a",
-                    colorBgElevated: '#303030',
                 },
             }}
         >
