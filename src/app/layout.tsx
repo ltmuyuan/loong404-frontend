@@ -7,8 +7,8 @@ import { AppLayout } from "@/components/AppLayout";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LOONG MINT",
-  description: "LOONG MINT",
+  title: "AI Loong",
+  description: "The first gnosis AI, ERC404-based Meme/NFT project.",
 };
 
 export const viewport: Viewport = {

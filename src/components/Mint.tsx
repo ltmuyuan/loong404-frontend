@@ -200,8 +200,6 @@ const RhtInput = styled.div`
     justify-content: space-between;
     background: rgba(255,255,255,0.1);
     border-radius: 4px;
-    width: 128px;
-    height: 27px;
     padding: 8px 10px;
     img{
         width: 25px;
@@ -431,23 +429,15 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                         <TitleItem $isActive={!isBaby} onClick={() => toGo('/mint/great')}>Great Loong</TitleItem>
                         <TitleItem $isActive={isBaby} onClick={() => toGo('/mint/baby')}>Baby Loong</TitleItem>
                     </TitleBox>
-                    {
-                        Number(percent) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
-                    }
-                    {
-                        Number(percent) > 25 && Number(percent) <= 50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
-                    }
-                    {
-                        Number(percent) > 50 && <ProBox width={percent}>
-                            <div className="top">
-                                <div>TOTAL MINTED</div>
-                                <div>{percent}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
-                            </div>
-                            <div className="proOuter">
-                                <div className="proInner" />
-                            </div>
-                        </ProBox>
-                    }
+                    <ProBox width={percent}>
+                        <div className="top">
+                            <div>TOTAL MINTED</div>
+                            <div>{percent}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
+                        </div>
+                        <div className="proOuter">
+                            <div className="proInner" />
+                        </div>
+                    </ProBox>
 
                     <ArticleBox>
                         {
