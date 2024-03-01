@@ -414,7 +414,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         } else {
             setMintType(null)
         }
-    }, [address, refresh])
+    }, [address, chainId, refresh])
 
     const percent = getPercent(minted, total)
 
