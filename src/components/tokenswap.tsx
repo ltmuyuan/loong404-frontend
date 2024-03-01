@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react';
 import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
 import ArrowSvg from '../assets/arrow.svg';
-import { swap } from "../utils/web3";
+import { swap, getSwapCommission } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 
@@ -108,7 +108,8 @@ const Box = styled.div`
     }
 `
 
-const Btn = styled.div`
+const Btn = styled.button`
+    border: 0;
     background: #792E22;
     height: 60px;
     width: 601px;
@@ -123,6 +124,12 @@ const Btn = styled.div`
     margin-top: 10px;
     @media (max-width: 1100px) {
         width: 100%;
+    }
+    .tips {
+        font-size: 12px;
+        margin-left: 12px;
+        opacity: 0.6;
+        margin-top: 6px;
     }
 `
 
@@ -139,6 +146,7 @@ const TokenSwap = () => {
     const [secondValue, setSecondValue] = useState(2)
     const [firstInput, setFirstInput] = useState(0)
     const [secondInput, setSecondInput] = useState(0)
+    const [commission, setCommission] = useState(5 / 1000)
 
     /** select change */
     const onFirstChange = (value: any) => {
@@ -155,7 +163,7 @@ const TokenSwap = () => {
     /** input change */
     const onInputChange = (value: any) => {
         setFirstInput(value)
-        setSecondInput(value)
+        setSecondInput(value * (1 - commission))
     }
 
     const onBtnClick = async () => {
@@ -174,6 +182,22 @@ const TokenSwap = () => {
             store.dispatch(saveLoading(false))
         }
     }
+
+    useEffect(() => {
+        if (!!commission) {
+            return;
+        }
+        getSwapCommission(walletProvider)
+            .then(commission => {
+                setCommission(commission / 1000);
+            })
+            .catch(e => {
+                // message.error('Get commission failed');
+                console.error(e);
+                setCommission(5 / 1000);
+            })
+    }, [walletProvider, commission, setCommission]);
+
     return (
         <Box>
             <h2 className="title">Tokens Swap</h2>
@@ -213,7 +237,7 @@ const TokenSwap = () => {
                         />
                     </div>
                 </div>
-                <Btn onClick={onBtnClick}>{ !address ? "Connect Wallet" : "Swap" }</Btn>
+                <Btn onClick={onBtnClick} disabled={!!commission}>{ !address ? "Connect Wallet" : commission ? <>Swap<span className="tips">(手续费：{commission * 100}%)</span></> : "Swap" }</Btn>
             </div>
         </Box>
     );

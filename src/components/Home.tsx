@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import BgImg from "@/assets/home-bg.jpg";
+import RisingBg from "@/assets/rising-bg.jpg";
 // import LogoImg from "@/assets/demo/logo.svg";
 // import LftImg from "@/assets/demo/left-bottom.png";
 // import RhtImg from "@/assets/demo/right-bottom.png";
@@ -225,14 +225,14 @@ export function Home() {
         </ConnectBox>
         <InnerBox>
             <InnerBoxContent>
-                <img src={BgImg.src} alt="" className="bg"/>
+                <img src={RisingBg.src} alt="" className="bg"/>
             </InnerBoxContent>
             <FloatBox>
                 <RhtBox>
                     <RhtInner>
                         <div className="lft">
                             <div className="top">ERC404 AI Gnosis</div>
-                            <div className="price"><span className="center"> 1100 Great Loong</span></div>
+                            <div className="price"><span className="center"> 300 Great Loong</span></div>
                         </div>
                         <BtnRht onClick={()=>toGo("/mint/great")}>
                             Mint Now
@@ -243,7 +243,7 @@ export function Home() {
                     <RhtInner>
                         <div className="lft">
                             <div className="top">ERC404 AI Gnosis</div>
-                            <div className="price"><span className="center"> 1100 Baby Loong</span></div>
+                            <div className="price"><span className="center"> 3000 Baby Loong</span></div>
                         </div>
                         <BtnRht onClick={()=>toGo("/mint/baby")}>
                             Mint Now
