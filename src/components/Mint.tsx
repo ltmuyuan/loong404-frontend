@@ -97,7 +97,7 @@ const TitleItem = styled.div<TitleItemProps>`
 `
 
 interface ProBoxProps {
-    width: number;
+    width: number | string;
 }
 const ProBox = styled.div<ProBoxProps>`
     display: flex;
@@ -291,15 +291,17 @@ const MINT_TYPE_CONNECT = "3"
 const Unit = 600000;
 
 export function MintLayout({ isBaby }: { isBaby: boolean }) {
-
+    const singleMintMax = isBaby ? 50 : 5;
+    const totalMint = isBaby ? 3000 : 300;
     const { address, chainId, isConnected } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
-    const [count, setCount] = useState(1)
+    const [count, setCount] = useState(0)
     const navigate = useRouter().push
     const searchParams = useSearchParams();
     const [mintType, setMintType] = useState<any>(null)
     const [minted, setMinted] = useState<any>('')
-    const [total, setTotal] = useState(isBaby ? 3000 : 300)
+    const [limitMint, setLimitMint] = useState(singleMintMax);
+    const [total, setTotal] = useState(totalMint)
     const [price, setPrice] = useState('')
     const [limitMemberMint, setLimitMemberMint] = useState(isBaby ? 50 : 5)
     const { open } = useWeb3Modal();
@@ -309,7 +311,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
     const normalMintRemain = total - minted;
-    const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
+    // const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
         setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
@@ -321,15 +323,15 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     }
 
     const onCountChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (Number(normalMintRemain) <= 0) {
+        if (Number(limitMint) <= 0) {
             setCount(0)
             return;
         }
         let v = e.target.value;
         if (Number(v) <= 0) {
             setCount(1)
-        } else if (Number(v) > singleMintMax) {
-            setCount(singleMintMax)
+        } else if (Number(v) > Number(limitMint)) {
+            setCount(Number(limitMint))
         } else {
             setCount(Number(v))
         }
@@ -337,13 +339,13 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
 
     const step = (type: string) => {
         // console.log("step", count, limitMemberMint)
-        if (Number(normalMintRemain) <= 0) {
+        if (Number(limitMint) <= 0) {
             setCount(0)
             return;
         }
         if (type === 'add') {
-            if (Number(count) >= singleMintMax) {
-                setCount(singleMintMax)
+            if (Number(count) >= Number(limitMint)) {
+                setCount(Number(limitMint))
             } else {
                 setCount(count + 1)
             }
@@ -402,6 +404,8 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                     setMinted(res.minted)
                     setPrice(res.price)
                     setMintType(res.isFree ? MINT_TYPE_FREE : MINT_TYPE_NORMAL)
+                    setLimitMint(singleMintMax - res.limitMint)
+                    setCount(singleMintMax - res.limitMint);
                 }).catch(e => {
                     setMintType(MINT_TYPE_NORMAL)
                 })
@@ -476,7 +480,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                             <div>Price: {count * Number(price)} ETH</div>
                             <RhtInput>
                                 <img src={LftImg.src} alt="" onClick={() => step('plus')} />
-                                <input type="number" min={0} step={1} max={singleMintMax} value={count} onChange={onCountChanged} />
+                                <input type="number" min={0} step={1} max={limitMint} value={count} onChange={onCountChanged} />
                                 <img src={RhtImg.src} alt="" onClick={() => step('add')} />
                             </RhtInput>
                         </FlexLine>
