@@ -1,30 +1,28 @@
 import styled from "styled-components";
-import DemoImg from "@/assets/demo.jpg";
+import GreatLImg from "../assets/greatL.jpg";
+import BabyLImg from "../assets/babyL.png";
 import TwitterImg from "@/assets/demo/twitter.png";
 import GlobalImg from "@/assets/demo/global.png";
 import LftImg from "@/assets/demo/minus.png";
 import RhtImg from "@/assets/demo/plus.png";
 import BgImg from "@/assets/demo/bg.png";
-import ConnectButton from "@/components/ConnectButton.jsx";
-import {useWeb3Modal, useWeb3ModalAccount} from '@web3modal/ethers/react'
-import {useWeb3ModalProvider} from "@web3modal/ethers/react";
-// import {Link, Outlet, useNavigate, useSearchParams } from "react-router-dom";
+import ConnectButton from "@/components/ConnectButton";
+import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
+import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation"
-import {useEffect, useState} from "react";
-import abi from '@/assets/abi/loong-abi.json'
-import {BrowserProvider, Contract, ethers, JsonRpcProvider} from "ethers";
-import {chain, contractAddress} from "@/common/config.js";
+import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
-import {useSelector} from "react-redux";
-import { Input, notification } from 'antd';
+import { useSelector } from "react-redux";
+import { Input, message, notification } from 'antd';
 import store from "@/store/index.js";
-import {saveLoading} from "@/store/reducer.js";
-import BigNumber from "bignumber.js";
+import { saveLoading } from "@/store/reducer.js";
 import LogoMint from "@/assets/logoMint.png";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
+import { mint, freeMint as freeMintWeb3 } from "@/utils/web3";
+import { addCommasToNumber, getInitMintInfo, getPercent } from "./utils";
 
 // #region Css
 const Layout = styled.div`
@@ -122,7 +120,7 @@ const ProBox = styled.div<ProBoxProps>`
     }
     .proInner{
         height: 100%;
-        width: ${props => props.width + "%" };
+        width: ${props => props.width + "%"};
         background: #ece2cf!important;
         border-radius: 8px;
     }
@@ -256,12 +254,22 @@ const LogoBox = styled.div`
 `
 const FormBox = styled.div`
     .ant-input {
-        margin-top: 15px;
+        margin-top: 40px;
         color: #000;
+        height: 48px;
+        border-radius: 6px;
+        border: none !important;
+        box-shadow: none !important;
+        background: #F7F8F9;
+    }
+    .btnBox {
+        display: flex;
+        justify-content: center;
     }
     button {
-        margin-top: 15px;
-        width: 100%;
+        width: 300px;
+        height: 60px;
+        margin: 40px auto 0;
     }
 `
 
@@ -281,116 +289,39 @@ const TipBox = styled.div`
 const MAX_COUNT = 5;
 const MINT_TYPE_FREE = '2'
 const MINT_TYPE_NORMAL = '1'
-const  Unit = 600000;
+const Unit = 600000;
 
 export function MintLayout({ isBaby }: { isBaby: boolean }) {
-    const { address, chainId,  isConnected } = useWeb3ModalAccount()
+
+    const { address, chainId, isConnected } = useWeb3ModalAccount()
     const { walletProvider } = useWeb3ModalProvider()
-    const [count, setCount] = useState(0)
-    // const navigate = useNavigate()
+    const [count, setCount] = useState(1)
     const navigate = useRouter().push
     const searchParams = useSearchParams();
-    const [mintType, setMintType] = useState<null | '1' | '2'>(null)
-    const [minted, setMinted] = useState('')
-    const [total, setTotal] = useState('')
+    const [mintType, setMintType] = useState<any>(null)
+    const [minted, setMinted] = useState<any>('')
+    const [total, setTotal] = useState(isBaby ? 3000 : 300)
     const [price, setPrice] = useState('')
-    const [limitMemberMint, setLimitMemberMint] = useState('0')
-    const [limitMint, setLimitMint] = useState('0')
-    const [normalMintRemain, setNormalMintRemain] = useState(0)
+    const [limitMemberMint, setLimitMemberMint] = useState(isBaby ? 50 : 5)
     const { open } = useWeb3Modal();
-    const loading = useSelector<{ loading: boolean }, boolean>(store => store.loading);
-    const [api, contextHolder] = notification.useNotification();
-    const [pro,setPro] = useState(0);
+    const loading = useSelector((store: any) => store.loading);
+    const [_, contextHolder] = notification.useNotification();
     const [refresh, setRefresh] = useState(0)
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
+    const normalMintRemain = total - minted;
 
     useEffect(() => {
         setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
         setInviteCode(searchParams.get('inviteCode') || '');
     }, [searchParams])
 
-    useEffect(()=> {
-        (async () => {
-            try {
-                const provider = new JsonRpcProvider(chain.rpcUrl);
-                const contract = new Contract(contractAddress, abi, provider)
-                const arr = [
-                    contract.minted(),
-                    contract.totalSupply(),
-                ]
-                const rests = await Promise.all(arr)
-                console.log(rests)
-                let mintedB = rests[0].toString();
-                setMinted(mintedB);
-                let totalB = ethers.formatEther(rests[1])
-                let totalAfter = new BigNumber(totalB).div(Unit);
-                console.log(totalAfter)
-                setTotal(totalAfter.toString());
-                let MintedBN = new BigNumber(mintedB)
-                const result = MintedBN.dividedBy(totalAfter);
-                const percentage = result.times(100).toString();
-                const per = Number(percentage).toFixed(2)
-                setPro(Number(per))
-
-            } catch (e) {
-                console.error(e)
-                setMinted('')
-                setPro(0)
-            }
-
-        })()
-    }, [refresh])
-
-    useEffect(() =>{
-        if (!address || !walletProvider || chainId !== chain.chainId) {
-            setMintType(null)
-            return;
-        }
-        (async () => {
-            const privider = new BrowserProvider(walletProvider);
-            try {
-                const signer = await privider.getSigner(address);
-                const contract = new Contract(contractAddress, abi, signer)
-
-                const arr = [
-                    contract.checkFreeMint(address),
-                    contract.price(),
-                    contract.limitUserMintNum(),
-                    contract.limitMint(address),
-                ]
-                const rests = await Promise.all(arr)
-                setMintType(rests[0] ? MINT_TYPE_FREE : MINT_TYPE_NORMAL);
-
-                setPrice( ethers.formatEther(rests[1]));
-                setLimitMemberMint(rests[2].toString())
-                setLimitMint(rests[3].toString())
-
-                let remain = Number(rests[2].toString()) - Number(rests[3].toString())
-                remain = remain < 0 ? 0 : remain;
-                setNormalMintRemain(remain)
-                setCount(remain)
-
-                console.log(rests, 'normalMintRemain=' + remain)
-
-            } catch (e) {
-                console.error(e)
-                setMintType(null);
-                setPrice('')
-                setLimitMemberMint('0')
-                setLimitMint('0')
-                setNormalMintRemain(0)
-                setCount(0)
-            }
-        })()
-    }, [address, walletProvider, chainId, refresh])
-
-    const toGo = (url: string) =>{
+    const toGo = (url: string) => {
         navigate(url)
     }
 
     const onCountChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (Number(normalMintRemain) <=0) {
+        if (Number(normalMintRemain) <= 0) {
             setCount(0)
             return;
         }
@@ -406,15 +337,15 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
 
     const step = (type: string) => {
         // console.log("step", count, limitMemberMint)
-        if (Number(normalMintRemain) <=0) {
+        if (Number(normalMintRemain) <= 0) {
             setCount(0)
             return;
         }
-        if (type === 'add')  {
-            Number(count) < Number(normalMintRemain) ? setCount(count+1) : setCount(Number(normalMintRemain))
+        if (type === 'add') {
+            Number(count) < Number(normalMintRemain) ? setCount(count + 1) : setCount(Number(normalMintRemain))
         }
         if (type === 'plus') {
-            Number(count) > 1 ? setCount(count-1) : setCount(1)
+            Number(count) > 1 ? setCount(count - 1) : setCount(1)
         }
     }
 
@@ -422,75 +353,73 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         open()
     }
 
-    const normalMint = async () => {
-        if (!walletProvider) {
+    const normalMint = async (showModal: boolean) => {
+        // check if the user has entered the number of mint
+        if (count <= 0) {
+            message.info('Please enter the number of mint')
             return;
         }
-        if (Number(count) <= 0) {
-            api.error({
-                message: 'You have exceeded the mint limit',
-            });
+        // show invite code modal
+        if (showModal) {
+            setIsModalOpenImport(true)
             return;
         }
         store.dispatch(saveLoading(true))
-        const privider = new BrowserProvider(walletProvider);
         try {
-            const signer = await privider.getSigner(address);
-            const contract = new Contract(contractAddress, abi, signer)
-            const res = await contract.mint(count, {value: ethers.parseEther(BigNumber(price).times(count).toString())})
-            await res.wait()
-            console.log(res)
-            setRefresh(Date.now())
-            api.success({
-                message: 'Mint Successfully',
-            });
-        } catch (e) {
-            console.error(e)
-            api.error({message: (e as Error).toString()})
+            await mint(walletProvider, !isBaby, count, price, inviteCode)
+            setIsModalOpenImport(false)
+            setRefresh(refresh + 1)
+            store.dispatch(saveLoading(false))
+            message.success('Mint success')
+        } catch (e: any) {
+            console.log(e)
+            const msg = e.message ? `Mint failed: ${e.message.split('[')[0].split('(')[0]}` : 'Mint failed'
+            message.error(msg)
+            store.dispatch(saveLoading(false))
         }
-        store.dispatch(saveLoading(false))
     }
 
     const freeMint = async () => {
-        if (!walletProvider) {
-            return;
-        }
         store.dispatch(saveLoading(true))
-        const provider = new BrowserProvider(walletProvider);
         try {
-            const signer = await provider.getSigner(address);
-            const contract = new Contract(contractAddress, abi, signer)
-            const res = await contract.freemint()
-            await res.wait()
-            console.log(res)
-            setRefresh(Date.now())
-            api.success({
-                message: 'Mint Successfully',
-            });
+            await freeMintWeb3(walletProvider, !isBaby)
+            setRefresh(refresh + 1)
+            store.dispatch(saveLoading(false))
+            message.success('Free Mint success')
         } catch (e) {
-            console.error(e)
-            api.error({message: (e as Error).toString()})
+            console.log(e)
+            const msg = e.message ? `Mint failed: ${e.message.split('[')[0].split('(')[0]}` : 'Mint failed'
+            message.error(msg)
+            store.dispatch(saveLoading(false))
         }
-        store.dispatch(saveLoading(false))
     }
 
-     const  addCommasToNumber =(number: string) =>{
-        let numbB = Number(number)
-         return numbB?.toLocaleString('en-US');
+    useEffect(() => {
+        if (address) {
+            getInitMintInfo(walletProvider, !isBaby)
+                .then(res => {
+                    setMinted(res.minted)
+                    setPrice(res.price)
+                    setMintType(res.isFree ? MINT_TYPE_FREE : MINT_TYPE_NORMAL)
+                }).catch(e => {
+                    setMintType(MINT_TYPE_NORMAL)
+                })
+        } else {
+            setMintType(null)
+        }
+    }, [address, refresh])
 
-    }
+    const percent = getPercent(minted, total)
 
     return <Layout>
         {
             loading && <Loading />
         }
-
-
         {contextHolder}
         <MainBox>
             <FirstLine>
-                <LogoBox onClick={()=>toGo("/")}>
-                    <img src={LogoMint.src} alt=""/>
+                <LogoBox onClick={() => toGo("/")}>
+                    <img src={LogoMint.src} alt="" />
                     {/*AILOONG*/}
                 </LogoBox>
                 {/*<img src={Logo} alt="" onClick={()=>toGo("/")}/>*/}
@@ -502,38 +431,29 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                         <TitleItem $isActive={!isBaby} onClick={() => toGo('/mint/great')}>Great Loong</TitleItem>
                         <TitleItem $isActive={isBaby} onClick={() => toGo('/mint/baby')}>Baby Loong</TitleItem>
                     </TitleBox>
-                    {/* {
-                        Number(pro) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
+                    {
+                        Number(percent) <= 25 && <TipBox>Less than 50%, let&apos;s work together!</TipBox>
                     }
                     {
-                        Number(pro) > 25 &&  Number(pro) <=50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
+                        Number(percent) > 25 && Number(percent) <= 50 && <TipBox>Almost 50%, let&apos;s work together!</TipBox>
                     }
                     {
-                        Number(pro) > 50 && <ProBox width={pro}>
+                        Number(percent) > 50 && <ProBox width={percent}>
                             <div className="top">
                                 <div>TOTAL MINTED</div>
-                                <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
+                                <div>{percent}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
                             </div>
                             <div className="proOuter">
                                 <div className="proInner" />
                             </div>
                         </ProBox>
-                    } */}
-                     <ProBox width={pro}>
-                        <div className="top">
-                            <div>TOTAL MINTED</div>
-                            <div>{pro}% {addCommasToNumber(minted)}/{addCommasToNumber(total)}</div>
-                        </div>
-                        <div className="proOuter">
-                            <div className="proInner" />
-                        </div>
-                    </ProBox>
+                    }
 
                     <ArticleBox>
                         {
-                            isBaby 
-                            ? <div><strong>Baby Loong</strong>: Even though may just be a baby, but Baby Loong can still provide the holder with predictions and advice. Due to its limited power, it may not bring back abundant treasures from exploring in the cyberspace. Similar to the Great Loong, it can also periodically analyze the holder's fortune and help them ward off disasters, avoid misfortunes, and seek good fortune.</div>
-                            : <div><strong>Great Loong</strong>:  An adult Loong spirit, rare in quantity, can provide the most comprehensive metaphysical predictions and advice for the holder. When exploring in the cyberspace, it can also grab more&better treasures. Periodically, the divine dragon spirit will automatically analyze the holder's fortune and help them ward off disasters, avoid misfortunes, and seek good fortune.</div>
+                            isBaby
+                                ? <div><strong>Baby Loong</strong>: Even though may just be a baby, but Baby Loong can still provide the holder with predictions and advice. Due to its limited power, it may not bring back abundant treasures from exploring in the cyberspace. Similar to the Great Loong, it can also periodically analyze the holder's fortune and help them ward off disasters, avoid misfortunes, and seek good fortune.</div>
+                                : <div><strong>Great Loong</strong>:  An adult Loong spirit, rare in quantity, can provide the most comprehensive metaphysical predictions and advice for the holder. When exploring in the cyberspace, it can also grab more&better treasures. Periodically, the divine dragon spirit will automatically analyze the holder's fortune and help them ward off disasters, avoid misfortunes, and seek good fortune.</div>
                         }
                         <p>Discover the World of AILoong: A gnosis AI in the Digital Realm</p>
                         <div><strong>Step into the realm of Loong, an extraordinary ERC404 NFT will born based on the constellation, personality and feeling of the moment you pressed the button, bring lucky and fortune to the ethers of the blockchain. </strong><span>This collection presents 1,100 uniquely random AI NFTs, magical gnosis  AI especially for everyone the digital age.</span></div>
@@ -542,10 +462,10 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                     </ArticleBox>
                     <SocialBox>
                         <Link href="/">
-                            <img src={GlobalImg.src} alt=""/>
+                            <img src={GlobalImg.src} alt="" />
                         </Link>
                         <Link href="https://twitter.com/AIloongglobal" target="_blank" >
-                            <img src={TwitterImg.src} alt=""/>
+                            <img src={TwitterImg.src} alt="" />
                         </Link>
 
                     </SocialBox>
@@ -556,22 +476,22 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                 </LftBox>
                 <RhtBox>
                     <PhotoBox>
-                        {isBaby ? <img src={''} alt="Baby Loong Picture"/> : <img src={DemoImg.src} alt="Great Loong Picture"/>}
+                        {isBaby ? <img src={BabyLImg.src} alt="Baby Loong Picture" /> : <img src={GreatLImg.src} alt="Great Loong Picture" />}
                     </PhotoBox>
                     {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
                         <FlexLine>
                             <div>Price: {price} ETH</div>
                             <RhtInput>
-                                <img src={LftImg.src} alt="" onClick={()=>step('plus')}/>
-                                <input type="number" min={0} step={1} value={count} onChange={onCountChanged}/>
-                                <img src={RhtImg.src} alt=""  onClick={()=>step('add')}/>
+                                <img src={LftImg.src} alt="" onClick={() => step('plus')} />
+                                <input type="number" min={0} step={1} value={count} onChange={onCountChanged} />
+                                <img src={RhtImg.src} alt="" onClick={() => step('add')} />
                             </RhtInput>
                         </FlexLine>
                     </RhtBtmBox>}
 
 
-                    {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint * {MINT_TYPE_FREE}</MintBtn>}
-                    {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint()}>Mint</MintBtn>}
+                    {mintType === MINT_TYPE_FREE && <MintBtn onClick={() => freeMint()}>Free Mint</MintBtn>}
+                    {mintType === MINT_TYPE_NORMAL && <MintBtn onClick={() => normalMint(true)}>Mint</MintBtn>}
                     {!mintType && <MintBtn onClick={() => connect()}>Connect Wallet</MintBtn>}
 
                 </RhtBox>
@@ -581,7 +501,9 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
             <FormBox>
                 <div>You need a code to participate. If you don’t have one, you can skip this step</div>
                 <Input placeholder="Enter invite code" value={inviteCode} onChange={(e) => setInviteCode(e.target.value)}></Input>
-                <Button>Submit</Button>
+                <div className="btnBox">
+                    <Button onClick={() => normalMint(false)}>Submit</Button>
+                </div>
             </FormBox>
         </Modal>
     </Layout>

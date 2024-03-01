@@ -3,8 +3,10 @@ import { useState } from "react";
 import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react';
 import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
-import ArrowSvg from '@/assets/arrow.svg';
-import { swap } from "@/utils/web3";
+import ArrowSvg from '../assets/arrow.svg';
+import { swap } from "../utils/web3";
+import store from "../store/index.js";
+import { saveLoading } from "../store/reducer.js";
 
 const Box = styled.div`
     background: #fdfaf1;
@@ -139,19 +141,19 @@ const TokenSwap = () => {
     const [secondInput, setSecondInput] = useState(0)
 
     /** select change */
-    const onFirstChange = (value) => {
+    const onFirstChange = (value: any) => {
         setFirstValue(value)
         setSecondValue(value === 1 ? 2 : 1)
     }
 
     /** select change */
-    const onSecondChange = (value) => {
+    const onSecondChange = (value: any) => {
         setSecondValue(value)
         setFirstValue(value === 1 ? 2 : 1)
     }
 
     /** input change */
-    const onInputChange = (value) => {
+    const onInputChange = (value: any) => {
         setFirstInput(value)
         setSecondInput(value)
     }
@@ -160,13 +162,16 @@ const TokenSwap = () => {
         if (!address) {
             open()
         } else {
+            store.dispatch(saveLoading(true))
             try {
                 await swap(walletProvider, firstInput, firstValue === 1)
                 message.success('Swap success')
-            } catch (e) {
+            } catch (e: any) {
+                console.error(e)
                 const msg = e.message ? `Swap failed: ${e.message.split('(')[0]}` : 'Swap failed'
                 message.error(msg)
             }
+            store.dispatch(saveLoading(false))
         }
     }
     return (
