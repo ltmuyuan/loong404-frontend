@@ -482,7 +482,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                             <div>Price: {price} ETH</div>
                             <RhtInput>
                                 <img src={LftImg.src} alt="" onClick={() => step('plus')} />
-                                <input type="number" min={0} step={10} max={isBaby ? 50 : 5} value={count} onChange={onCountChanged} />
+                                <input type="number" min={0} step={1} max={singleMintMax} value={count} onChange={onCountChanged} />
                                 <img src={RhtImg.src} alt="" onClick={() => step('add')} />
                             </RhtInput>
                         </FlexLine>
