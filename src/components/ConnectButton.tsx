@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import CopySvg from '../assets/copy.svg';
-import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getLimitMemberMint, getBalanceGreatLoong, getBalanceBabyLoong } from "../utils/web3";
+import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getLimitMemberMint, getBalanceLoong, getNftIds } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 import { chain } from '@/common/config';
@@ -201,17 +201,19 @@ export default function ConnectButton() {
     }
 
     const tokensInit = async () => {
-        const greateAmount = await getInviteRewards(walletProvider, true)
-        const babyAmount = await getInviteRewards(walletProvider, false)
-        setTokens({ greatLoong: greateAmount, babyLoong: babyAmount })
+        const [greatLoong, babyLoong] = await Promise.all([
+            getInviteRewards(walletProvider, true),
+            getInviteRewards(walletProvider, false)
+        ]);
+        setTokens({ greatLoong, babyLoong })
     }
 
     const assetsInit = async () => {
         const [greatLoongNFTRemain, babyLoongNFTRemain, greatLoongTokensRemain, babyLoongTokensRemain] = await Promise.all([
             getLimitMemberMint(walletProvider, true),
             getLimitMemberMint(walletProvider, false),
-            getBalanceGreatLoong(walletProvider),
-            getBalanceBabyLoong(walletProvider),
+            getBalanceLoong(walletProvider, true),
+            getBalanceLoong(walletProvider, false),
         ]);
         setMyNTFs({ greatLoong: greatLoongNFTRemain, babyLoong: babyLoongNFTRemain })
         setMyTokens({ greatLoong: greatLoongTokensRemain, babyLoong: babyLoongTokensRemain })

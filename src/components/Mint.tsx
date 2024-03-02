@@ -365,8 +365,8 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         if (showModal) {
             if (inviteCode) {
                 setIsModalOpenImport(true)
+                return;
             }
-            return;
         }
         store.dispatch(saveLoading(true))
         try {

@@ -4,7 +4,7 @@ import { useWeb3Modal, useWeb3ModalAccount, useWeb3ModalProvider } from '@web3mo
 import { InputNumber, Select, message } from "antd";
 import styled from "styled-components";
 import ArrowSvg from '../assets/arrow.svg';
-import { swap, getSwapCommission, getBalanceBabyLoong, getBalanceGreatLoong, } from "../utils/web3";
+import { swap, getSwapCommission, getBalanceLoong } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 
@@ -207,8 +207,8 @@ const TokenSwap = () => {
 
     const getBalance = async () => {
         const [greatLoong, babyLoong] = await Promise.all([
-            getBalanceGreatLoong(walletProvider),
-            getBalanceBabyLoong(walletProvider),
+            getBalanceLoong(walletProvider, true),
+            getBalanceLoong(walletProvider, false),
         ])
         setBalance({
             greatLoong,
