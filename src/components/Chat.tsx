@@ -7,49 +7,9 @@ import debounce from "lodash/debounce";
 import { ChatMessage } from "@ant-design/pro-chat/es/types/message";
 import dynamic from "next/dynamic"; // 生成 ID
 import RisingBg from "@/assets/rising-bg.jpg";
-import ConnectButton from "./ConnectButton";
-import styled from "styled-components";
-import HomeLogo from "@/assets/logoHome.png"
-import Link from "next/link";
+import { Header } from "./Header";
 
 const ProChat = dynamic(() => import("./ProChat"), { ssr: false });
-const HolidayMusicPlayer = dynamic(() => import("./Music"), { ssr: false });
-
-
-const LogoBox = styled.div`
-    position: absolute;
-    left: 40px;
-    top: 40px;
-    z-index: 99;
-    cursor: pointer;
-    width: 200px;
-    //background: #83271c;
-    font-weight: bold;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    height: 40px;
-    font-size: 23px;
-    border-radius: 10px;
-    img{width: 100%;}
-    @media (max-width: 1100px) {
-        left: 5vw;
-        top: 5vw;
-        width: 145px;
-    }
-`
-
-const ConnectBox = styled.div`
-  position: absolute;
-  right: 40px;
-  top: 40px;
-  z-index: 999;
-  @media (max-width: 1100px) {
-      right: 5vw;
-      top: 5vw;
-  }
-`;
 
 // 生成 ID
 const userId = nanoid();
@@ -82,9 +42,6 @@ export function Chat() {
   return (
     <div
       style={{
-        // backgroundColor: theme.colorBgLayout,
-        // backgroundImage:
-        //   "url('https://oss.anuniverse.com/public/background.jpg')",
         backgroundImage: `url(${RisingBg.src})`,
         backgroundSize: "cover",
         backgroundRepeat: "no-repeat",
@@ -94,14 +51,7 @@ export function Chat() {
         height: "100vh",
       }}
     >
-      <LogoBox>
-        <Link href="/">
-          <img src={HomeLogo.src} alt=""/>
-        </Link>
-      </LogoBox>
-      <ConnectBox>
-        <ConnectButton />
-      </ConnectBox>
+      <Header />
       {/*<HolidayMusicPlayer*/}
       {/*  src={"https://oss.anuniverse.com/public/257893594.mp3"}*/}
       {/*/>*/}

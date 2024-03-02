@@ -9,6 +9,7 @@ import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards } fro
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 import { chain } from '@/common/config';
+import { CopyFilled } from "@ant-design/icons"
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -72,6 +73,61 @@ const RewardBox = styled.div`
     }
 `;
 
+const AssetsBox = styled.div`
+    color: #000000;
+    font-size: 16px;
+    font-family: PingFang SC;
+    .desc {
+       margin-bottom: 12px;
+       font-size: 14px;
+    }
+    .card {
+        border: 1px solid #792E22;
+        padding: 16px 18px;
+        background-color: #fdfaf1;
+    }
+    .card + .card {
+        margin-top: 16px;
+    }
+    .title {
+        display: flex;
+        align-items: center;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .title .desc {
+        margin: 0;
+        color: #979797;
+        margin-left: 4px;
+    }
+
+    .row + .row {
+        margin-top: 20px;
+    }
+    .main, .sub {
+        display: flex;
+        align-items: center;
+    }
+    .num {
+        font-size: 32px;
+        line-height: 1;
+        font-weight: 700;
+        color: #792E22;
+    }
+    .unit {
+        margin-left: 8px;
+    }
+    .sub .desc {
+        color: #979797;
+        margin: 0;
+        line-height: 1;
+    }
+    .copy {
+        margin-left: 4px;
+        cursor: pointer;
+    }
+`
+
 function truncateString(str: any, maxLength: any) {
     if (str.length <= maxLength) {
         return str;
@@ -91,8 +147,11 @@ export default function ConnectButton() {
     const { walletProvider } = useWeb3ModalProvider()
     const [isModalOpenInvite, setIsModalOpenInvite] = useState(false)
     const [isModalOpenReward, setIsModalOpenReward] = useState(false)
+    const [isModalOpenAssets, setIsModalOpenAssets] = useState(false)
     const [inviteCode, setInviteCode] = useState('')
     const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [myTokens, setMyTokens] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [myNTFs, setMyNTFs] = useState({ babyLoong: 0, greatLoong: 0 })
 
     const onClick = () => {
         open()
@@ -153,6 +212,11 @@ export default function ConnectButton() {
         setPopoverOpen(false)
     }
 
+    const onAssets = () => {
+        setIsModalOpenAssets(true)
+        setPopoverOpen(false)
+    }
+
     const onClaim = async () => {
         store.dispatch(saveLoading(true))
         try {
@@ -193,6 +257,7 @@ export default function ConnectButton() {
         <>
             <LineBox>
                 <li onClick={() => toAccount()}>Account</li>
+                <li onClick={() => onAssets()}>Assets</li>
                 <li onClick={() => onInvite()}>Invite</li>
                 <li onClick={() => onReward()}>Reward</li>
                 <li onClick={() => disconnectWallet()}>Logout</li>
@@ -226,6 +291,49 @@ export default function ConnectButton() {
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
                     <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClaim}>Claim</Button>
                 </div>
+            </Modal>
+            <Modal isOpen={isModalOpenAssets} onClose={() => setIsModalOpenAssets(false)} title="My Assets">
+                <AssetsBox>
+                    <div className="desc">We believe these one-of-a-kind NTFs and tokens will bring me more returns</div>
+                    <div className="card">
+                        <div className="title">My Tokens</div>
+                        <div className="row">
+                            <div className="main">
+                                <div className="num">{myTokens.greatLoong}</div>
+                                <div className="unit">Great Loong tokens</div>
+                            </div>
+                            <div className="sub">
+                                <div className="desc">token contract address: </div>
+                                <div className="copy"><img src={CopySvg.src} alt="copy" title="copy" /></div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="main">
+                                <div className="num">{myTokens.babyLoong}</div>
+                                <div className="unit">Baby Loong tokens</div>
+                            </div>
+                            <div className="sub">
+                                <div className="desc">token contract address: </div>
+                                <div className="copy"><img src={CopySvg.src} alt="copy" title="copy" /></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="card">
+                        <div className="title">My NFTs<div className="desc">(support by OpenSea)</div></div>
+                        <div className="row">
+                            <div className="main">
+                                <div className="num">{myNTFs.greatLoong}</div>
+                                <div className="unit">Great Loong NFT</div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="main">
+                                <div className="num">{myNTFs.babyLoong}</div>
+                                <div className="unit">Baby Loong NFT</div>
+                            </div>
+                        </div>
+                    </div>
+                </AssetsBox>
             </Modal>
         </>
     ) :
