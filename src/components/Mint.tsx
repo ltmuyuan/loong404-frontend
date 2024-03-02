@@ -475,7 +475,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                     <PhotoBox>
                         {isBaby ? <img src={BabyLImg.src} alt="Baby Loong Picture" /> : <img src={GreatLImg.src} alt="Great Loong Picture" />}
                     </PhotoBox>
-                    {mintType === MINT_TYPE_FREE && <RhtBtmBox>
+                    {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
                         <FlexLine>
                             <div>Price: {count * Number(price)} ETH</div>
                             <RhtInput>
