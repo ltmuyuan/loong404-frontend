@@ -254,8 +254,8 @@ export const mint = async (walletProvider, isGreateL, amount, price, inviteCode)
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
-    const realPrice = Number(amount) * Number(price)
-    const value = ethers.parseEther(realPrice.toString())
+    const realPrice = new Decimal(price || "0").mul(new Decimal(amount.toString())).toString()
+    const value = ethers.parseEther(realPrice)
     const tx = await contract.mint(amount, inviteCode || "", {
         value,
     })

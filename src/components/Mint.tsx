@@ -23,6 +23,7 @@ import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
 import { mint, freeMint as freeMintWeb3 } from "@/utils/web3";
 import { addCommasToNumber, getInitMintInfo, getPercent } from "./utils";
+import Decimal from 'decimal.js';
 
 // #region Css
 const Layout = styled.div`
@@ -415,6 +416,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     }, [address, chainId, refresh])
 
     const percent = getPercent(minted, total)
+    const allMoney = new Decimal(price || "0").mul(new Decimal(count.toString())).toString()
 
     return <Layout>
         {
@@ -477,7 +479,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
                     </PhotoBox>
                     {mintType === MINT_TYPE_NORMAL && <RhtBtmBox>
                         <FlexLine>
-                            <div>Price: {count * Number(price)} ETH</div>
+                            <div>Price: {allMoney} ETH</div>
                             <RhtInput>
                                 <img src={LftImg.src} alt="" onClick={() => step('plus')} />
                                 <input type="number" min={0} step={1} max={limitMint} value={count} onChange={onCountChanged} />
