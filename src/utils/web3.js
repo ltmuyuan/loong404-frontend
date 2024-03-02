@@ -317,5 +317,5 @@ export const getLimitMemberMint = async (walletProvider, isGreateL) => {
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
     const num = await contract.limitMintMap(signer.getAddress())
     const numReal = ethers.formatEther(num)
-    return Number(numReal)
+    return Math.floor(Number(numReal));
 }

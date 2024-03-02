@@ -152,6 +152,11 @@ export default function ConnectButton() {
     const [myTokens, setMyTokens] = useState({ babyLoong: '0', greatLoong: '0' })
     const [myNTFs, setMyNTFs] = useState({ babyLoong: 0, greatLoong: 0 })
 
+    const origin =
+        typeof window !== 'undefined' && window.location.origin
+            ? window.location.origin
+            : ''
+
     const onClick = () => {
         open()
     }
@@ -171,8 +176,8 @@ export default function ConnectButton() {
         window.open(`${chain.explorerUrl}address/${address}`, '_blank')
     }
 
-    const onCopy = () => {
-        navigator.clipboard.writeText(inviteCode)
+    const onCopy = (text: string) => {
+        navigator.clipboard.writeText(text)
         message.success('Copied')
     }
 
@@ -281,6 +286,8 @@ export default function ConnectButton() {
         </>
     );
 
+    const inviteCodeUrl = inviteCode ? `${origin}/mint/great?inviteCode=${inviteCode}` : "";
+
     return address ? (
         <>
             <Popover placement="bottom" onOpenChange={handleOpenChange} open={popoverOpen} content={content} trigger="click">
@@ -288,9 +295,9 @@ export default function ConnectButton() {
             </Popover>
             <Modal isOpen={isModalOpenInvite} onClose={() => setIsModalOpenInvite(false)} title="Invite friends">
                 <div>Invite your friends to join our community with a custom referral code</div>
-                <InviteFriendsRow onClick={onCopy}>
+                <InviteFriendsRow onClick={() => onCopy(inviteCode)}>
                     <div>Invite Code:</div>
-                    <div className="code">{inviteCode}</div>
+                    <div className="code">{inviteCodeUrl}</div>
                     <img src={CopySvg.src} alt="copy" title="copy" />
                 </InviteFriendsRow>
                 <div style={{ display: "flex", justifyContent: "center" }}>
@@ -320,7 +327,7 @@ export default function ConnectButton() {
                             </div>
                             <div className="sub">
                                 <div className="desc">token contract address: {chain.contract.GreatLoongAddress}</div>
-                                <div className="copy"><img src={CopySvg.src} alt="copy" title="copy" /></div>
+                                <div className="copy" onClick={() => onCopy(chain.contract.GreatLoongAddress)}><img src={CopySvg.src} alt="copy" title="copy" /></div>
                             </div>
                         </div>
                         <div className="row">
@@ -330,7 +337,7 @@ export default function ConnectButton() {
                             </div>
                             <div className="sub">
                                 <div className="desc">token contract address: {chain.contract.BabyLoongAddress}</div>
-                                <div className="copy"><img src={CopySvg.src} alt="copy" title="copy" /></div>
+                                <div className="copy" onClick={() => onCopy(chain.contract.BabyLoongAddress)}><img src={CopySvg.src} alt="copy" title="copy" /></div>
                             </div>
                         </div>
                     </div>
