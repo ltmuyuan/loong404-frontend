@@ -6,6 +6,7 @@ import MintABI from "./abi/IMint.json";
 import { ethers } from "ethers";
 import { chain } from "../common/config";
 import { message } from "antd";
+import Decimal from "decimal.js";
 
 const { GreatLoongAddress, BabyLoongAddress, swapAddress, dataAddress, greatLMintAddr, babyLMintAddr } = chain.contract;
 
@@ -34,12 +35,11 @@ export const swap = async (walletProvider, amount, isGreat) => {
     }
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
     const signer = await ethersProvider.getSigner()
-    let balance = 0, approveContract
+    const balance = await getBalanceLoong(walletProvider, isGreat)
+    let approveContract
     if (isGreat) {
-        balance = await getBalanceGreatLoong(walletProvider)
         approveContract = new ethers.Contract(GreatLoongAddress, GreatLABI.abi, signer)
     } else {
-        balance = await getBalanceBabyLoong(walletProvider)
         approveContract = new ethers.Contract(BabyLoongAddress, BabyLABI.abi, signer)
     }
     if (balance < amount) {
@@ -61,28 +61,18 @@ export const swap = async (walletProvider, amount, isGreat) => {
 }
 
 /**
- * Get GreatLoong balance
+ * Get balance token of Loong
  * @param {* this is a browser provider ethers can use} walletProvider 
  * @returns amount of GreatLoong
  */
-export const getBalanceGreatLoong = async (walletProvider) => {
+export const getBalanceLoong = async (walletProvider, isGreateL) => {
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
     const signer = await ethersProvider.getSigner()
-    const contract = new ethers.Contract(GreatLoongAddress, GreatLABI.abi, signer)
-    const balance = await contract.balanceOf(signer.getAddress())
-    const balanceStr = ethers.formatEther(balance)
-    return balanceStr.toString()
-}
-
-/**
- * Get BabyLoong balance
- * @param {* this is a browser provider ethers can use} walletProvider
- * @returns amount of BabyLoong
- */
-export const getBalanceBabyLoong = async (walletProvider) => {
-    const ethersProvider = new ethers.BrowserProvider(walletProvider)
-    const signer = await ethersProvider.getSigner()
-    const contract = new ethers.Contract(BabyLoongAddress, BabyLABI.abi, signer)
+    const contract = new ethers.Contract(
+        isGreateL ? GreatLoongAddress : BabyLoongAddress, 
+        isGreateL ? GreatLABI.abi : BabyLABI.abi,
+        signer
+    )
     const balance = await contract.balanceOf(signer.getAddress())
     const balanceStr = ethers.formatEther(balance)
     return balanceStr.toString()
@@ -254,8 +244,8 @@ export const mint = async (walletProvider, isGreateL, amount, price, inviteCode)
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
-    const realPrice = Number(amount) * Number(price)
-    const value = ethers.parseEther(realPrice.toString())
+    const realPrice = new Decimal(price || "0").mul(new Decimal(amount.toString())).toString()
+    const value = ethers.parseEther(realPrice)
     const tx = await contract.mint(amount, inviteCode || "", {
         value,
     })
@@ -294,7 +284,11 @@ export const getTotalMinted = async (walletProvider, isGreateL) => {
 export const totalSupply = async (walletProvider, isGreateL) => {
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
     const signer = await ethersProvider.getSigner()
-    const contract = new ethers.Contract(isGreateL ? GreatLoongAddress : BabyLoongAddress, isGreateL ? GreatLABI.abi : BabyLABI.abi, signer)
+    const contract = new ethers.Contract(
+        isGreateL ? GreatLoongAddress : BabyLoongAddress,
+        isGreateL ? GreatLABI.abi : BabyLABI.abi,
+        signer
+    )
     const num = await contract.totalSupply()
     const numReal = ethers.formatEther(num)
     return numReal.toString()
@@ -316,6 +310,35 @@ export const getLimitMemberMint = async (walletProvider, isGreateL) => {
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
     const num = await contract.limitMintMap(signer.getAddress())
-    const numReal = ethers.formatEther(num)
-    return Math.floor(Number(numReal));
+    return Number(num)
+}
+
+// getOwned
+export const getNftIds = async (walletProvider, isGreateL) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(
+        isGreateL ? GreatLoongAddress : BabyLoongAddress,
+        isGreateL ? GreatLABI.abi : BabyLABI.abi,
+        signer
+    )
+    const oldData = await contract.getOwned(signer.getAddress())
+    const arr = []
+    oldData.forEach((item, index) => {
+        arr.push(item.toString())
+    })
+    return arr
+}
+
+// getTokenURI
+export const getTokenURI = async (walletProvider, isGreateL, tokenId) => {
+    const ethersProvider = new ethers.BrowserProvider(walletProvider)
+    const signer = await ethersProvider.getSigner()
+    const contract = new ethers.Contract(
+        isGreateL ? GreatLoongAddress : BabyLoongAddress,
+        isGreateL ? GreatLABI.abi : BabyLABI.abi,
+        signer
+    )
+    const uri = await contract.tokenURI(tokenId)
+    return uri
 }
