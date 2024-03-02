@@ -67,6 +67,20 @@ const Box = styled.div`
                 font-weight: 400;
                 color: #000000;
                 margin-bottom: 8px;
+                display: flex;
+                align-items: center;
+            }
+            .remain {
+                font-size: 14px;
+                color: #000000;
+                margin-left: 4px;
+            }
+            .max {
+                margin-left: 8px;
+                border: 1px solid #000;
+                font-size: 12px;
+                padding: 2px;
+                cursor: pointer;
             }
             .value {
                 display: flex;
@@ -170,6 +184,10 @@ const TokenSwap = () => {
         setSecondInput(value * (1 - commission))
     }
 
+    const onMax = () => {
+        onInputChange(firstValue === 1 ? balance.greatLoong : balance.babyLoong)
+    };
+
     const onBtnClick = async () => {
         if (!address) {
             open()
@@ -229,7 +247,7 @@ const TokenSwap = () => {
             <div className="des">The official provides a 1:1 trading pool for Great Loong-Baby Loong tokens. The pool is locked, ensuring the upper limit of the number of Great Loong and Baby Loong NFTs and the upper limit of 404 token circulation.</div>
             <div className="form">
                 <div className="item">
-                    <div className="label">{firstValue === 1 ? balance.greatLoong : balance.babyLoong}</div>
+                    <div className="label">You Pay<div className="remain">({firstValue === 1 ? balance.greatLoong : balance.babyLoong})</div><div className="max" onClick={() => onMax()}>Max</div></div>
                     <div className="value">
                         <InputNumber
                             controls={false}
@@ -248,7 +266,7 @@ const TokenSwap = () => {
                     src={ArrowSvg.src}
                 />
                 <div className="item">
-                    <div className="label">{firstValue === 1 ? balance.greatLoong : balance.babyLoong}</div>
+                    <div className="label">You Get</div>
                     <div className="value">
                         <InputNumber
                             controls={false}
@@ -262,7 +280,7 @@ const TokenSwap = () => {
                         />
                     </div>
                 </div>
-                <Btn onClick={onBtnClick} disabled={!!commission}>{ !address ? "Connect Wallet" : commission ? <>Swap<span className="tips">(手续费：{commission * 100}%)</span></> : "Swap" }</Btn>
+                <Btn onClick={onBtnClick} disabled={!!commission}>{ !address ? "Connect Wallet" : commission ? <>Swap<span className="tips">(fee rate: {commission * 100}%)</span></> : "Swap" }</Btn>
             </div>
         </Box>
     );

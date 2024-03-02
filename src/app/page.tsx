@@ -2,7 +2,7 @@
 
 import { Home } from "@/components/Home";
 
-export default function App() {
+export default function Page() {
   return (
     <>
       <Home />
