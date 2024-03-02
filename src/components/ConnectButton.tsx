@@ -5,11 +5,10 @@ import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import CopySvg from '../assets/copy.svg';
-import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards } from "../utils/web3";
+import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getLimitMemberMint, getBalanceGreatLoong, getBalanceBabyLoong } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 import { chain } from '@/common/config';
-import { CopyFilled } from "@ant-design/icons"
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -150,7 +149,7 @@ export default function ConnectButton() {
     const [isModalOpenAssets, setIsModalOpenAssets] = useState(false)
     const [inviteCode, setInviteCode] = useState('')
     const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
-    const [myTokens, setMyTokens] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [myTokens, setMyTokens] = useState({ babyLoong: '0', greatLoong: '0' })
     const [myNTFs, setMyNTFs] = useState({ babyLoong: 0, greatLoong: 0 })
 
     const onClick = () => {
@@ -200,6 +199,17 @@ export default function ConnectButton() {
         const greateAmount = await getInviteRewards(walletProvider, true)
         const babyAmount = await getInviteRewards(walletProvider, false)
         setTokens({ greatLoong: greateAmount, babyLoong: babyAmount })
+    }
+
+    const assetsInit = async () => {
+        const [greatLoongNFTRemain, babyLoongNFTRemain, greatLoongTokensRemain, babyLoongTokensRemain] = await Promise.all([
+            getLimitMemberMint(walletProvider, true),
+            getLimitMemberMint(walletProvider, false),
+            getBalanceGreatLoong(walletProvider),
+            getBalanceBabyLoong(walletProvider),
+        ]);
+        setMyNTFs({ greatLoong: greatLoongNFTRemain, babyLoong: babyLoongNFTRemain })
+        setMyTokens({ greatLoong: greatLoongTokensRemain, babyLoong: babyLoongTokensRemain })
     }
 
     const onInvite = () => {
@@ -253,6 +263,12 @@ export default function ConnectButton() {
         }
     }, [address, isModalOpenReward])
 
+    useEffect(() => {
+        if (address && isModalOpenAssets) {
+            assetsInit()
+        }
+    }, [address, isModalOpenAssets])
+
     const content = (
         <>
             <LineBox>
@@ -303,7 +319,7 @@ export default function ConnectButton() {
                                 <div className="unit">Great Loong tokens</div>
                             </div>
                             <div className="sub">
-                                <div className="desc">token contract address: </div>
+                                <div className="desc">token contract address: {chain.contract.GreatLoongAddress}</div>
                                 <div className="copy"><img src={CopySvg.src} alt="copy" title="copy" /></div>
                             </div>
                         </div>
@@ -313,7 +329,7 @@ export default function ConnectButton() {
                                 <div className="unit">Baby Loong tokens</div>
                             </div>
                             <div className="sub">
-                                <div className="desc">token contract address: </div>
+                                <div className="desc">token contract address: {chain.contract.BabyLoongAddress}</div>
                                 <div className="copy"><img src={CopySvg.src} alt="copy" title="copy" /></div>
                             </div>
                         </div>
