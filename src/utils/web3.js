@@ -83,7 +83,7 @@ export const getBalanceLoong = async (walletProvider, isGreateL) => {
  * @param {* this is a browser provider ethers can use} walletProvider 
  * @returns amount of GreatLoong
  */
-export const getOwnerOfLoong = async (walletProvider, isGreateL) => {
+export const getOwnerOfLoong = async (walletProvider, isGreateL, id) => {
     const ethersProvider = new ethers.BrowserProvider(walletProvider)
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(
@@ -91,7 +91,7 @@ export const getOwnerOfLoong = async (walletProvider, isGreateL) => {
         isGreateL ? GreatLABI.abi : BabyLABI.abi,
         signer
     )
-    const ownerNum = await contract.ownerOf(signer.getAddress())
+    const ownerNum = await contract.ownerOf(id)
     const ownerNumStr = ethers.formatEther(ownerNum)
     return ownerNumStr.toString()
 }

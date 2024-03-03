@@ -407,13 +407,12 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     useEffect(() => {
         if (address) {
             getInitMintInfo(walletProvider, !isBaby)
-                .then(res => {
-                    debugger;
-                    setMinted(res.minted)
-                    setPrice(res.price)
+            .then(res => {
+                setMinted(res.minted)
+                setPrice(res.price)
                     setMintType(res.isFree ? MINT_TYPE_FREE : MINT_TYPE_NORMAL)
-                    setLimitMint(singleMintMax - Number(res.ownNum))
-                    setCount(singleMintMax - Number(res.ownNum));
+                    setLimitMint(singleMintMax - Number(res.nftIds.length))
+                    setCount(singleMintMax - Number(res.nftIds.length));
                 }).catch(e => {
                     setMintType(MINT_TYPE_NORMAL)
                 })
