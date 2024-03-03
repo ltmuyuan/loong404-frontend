@@ -316,7 +316,7 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     // const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
-        setIsModalOpenImport(Boolean(searchParams.get(SearchName.InviteCode));
+        setIsModalOpenImport(Boolean(searchParams.get(SearchName.InviteCode)));
         setInviteCode(searchParams.get(SearchName.InviteCode) || '');
     }, [searchParams])
 
