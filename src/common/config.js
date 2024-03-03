@@ -15,7 +15,7 @@ const testnet = {
     rpcUrl: 'https://data-seed-prebsc-1-s1.bnbchain.org:8545'
 }
 
-const optest = {
+export const optest = {
     chainId: 11155420,
     name: 'Optimism Testnet',
     currency: 'ETH',
@@ -31,7 +31,39 @@ const optest = {
     }
 }
 
-export const chain = optest;
+export const Arbitrum_Sepolia = {
+    chainId: 421614,
+    name: 'Arbitrum Sepolia',
+    currency: 'ETH',
+    explorerUrl: 'https://sepolia-explorer.arbitrum.io/',
+    rpcUrl: 'https://sepolia-rollup.arbitrum.io/rpc',
+    contract: {
+        GreatLoongAddress: "0xEEdb8cc53eA0bd6eD67a22D07d3945dc54b79E67",
+        greatLMintAddr: "0xe1Ca9Bf70A8539534df230462F18644BC7469C3E",
+        BabyLoongAddress: "0x2436C27Acf956D1155899dc7a084BC9aA6B8A62a",
+        babyLMintAddr: "0x2d9fFfa05B5315cd57292778Fe8E774Fe7BbA13D",
+        swapAddress: "0xE11d592cDF2eB37740A2609f5B70e2f4a1a31cf4",
+        dataAddress: "0xC95FF4bf5511F8c32a5FDA3412e0Cf54Ae5aEdb2",
+    }
+}
+
+export const Arbitrum_One = {
+    chainId: 42161,
+    name: 'Arbitrum LlamaNodes',
+    currency: 'ETH',
+    explorerUrl: 'https://arbiscan.io/',
+    rpcUrl: 'https://arbitrum.llamarpc.com',
+    contract: {
+        GreatLoongAddress: "0xEEdb8cc53eA0bd6eD67a22D07d3945dc54b79E67",
+        greatLMintAddr: "0xe1Ca9Bf70A8539534df230462F18644BC7469C3E",
+        BabyLoongAddress: "0x2436C27Acf956D1155899dc7a084BC9aA6B8A62a",
+        babyLMintAddr: "0x2d9fFfa05B5315cd57292778Fe8E774Fe7BbA13D",
+        swapAddress: "0xE11d592cDF2eB37740A2609f5B70e2f4a1a31cf4",
+        dataAddress: "0xC95FF4bf5511F8c32a5FDA3412e0Cf54Ae5aEdb2",
+    }
+}
+
+export const chain = Arbitrum_Sepolia;
 // export const contractAddress = '0x582a2124A6a47Db11B33f5ae67B12055655396d8'
 // export const chain = mainnet;
 export const contractAddress = '0xBc4B1e8caC87872AA6970f4d396C778CAE4F4C1F'

@@ -232,6 +232,9 @@ const TokenSwap = () => {
     }, [walletProvider, commission, setCommission]);
 
     useEffect(() => {
+        if (!address) {
+            return;
+        }
         getBalance()
         const timer = setInterval(() => {
             getBalance()
