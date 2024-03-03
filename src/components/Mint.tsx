@@ -11,7 +11,7 @@ import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
 import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import { useSelector } from "react-redux";
@@ -24,6 +24,7 @@ import Button from "@/components/ui/Button";
 import { mint, freeMint as freeMintWeb3 } from "@/utils/web3";
 import { addCommasToNumber, getInitMintInfo, getPercent } from "./utils";
 import Decimal from 'decimal.js';
+import { SearchName } from "@/constant";
 
 // #region Css
 const Layout = styled.div`
@@ -312,15 +313,20 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
     const normalMintRemain = total - minted;
+    const pathname = usePathname();
     // const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
-        setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
-        setInviteCode(searchParams.get('inviteCode') || '');
-    }, [searchParams])
+        const canOpen = Boolean(searchParams.get(SearchName.InviteCode));
+        if (pathname === '/mint') {
+            setIsModalOpenImport(canOpen);
+        }
+        setInviteCode(searchParams.get(SearchName.InviteCode) || '');
+    }, [searchParams, pathname])
 
     const toGo = (url: string) => {
-        navigate(url)
+        const code = searchParams.get(SearchName.InviteCode);
+        navigate(code ? `${url}?${SearchName.InviteCode}=${code}` : url)
     }
 
     const onCountChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -402,11 +408,12 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         if (address) {
             getInitMintInfo(walletProvider, !isBaby)
                 .then(res => {
+                    debugger;
                     setMinted(res.minted)
                     setPrice(res.price)
                     setMintType(res.isFree ? MINT_TYPE_FREE : MINT_TYPE_NORMAL)
-                    setLimitMint(singleMintMax - res.limitMint)
-                    setCount(singleMintMax - res.limitMint);
+                    setLimitMint(singleMintMax - Number(res.ownNum))
+                    setCount(singleMintMax - Number(res.ownNum));
                 }).catch(e => {
                     setMintType(MINT_TYPE_NORMAL)
                 })

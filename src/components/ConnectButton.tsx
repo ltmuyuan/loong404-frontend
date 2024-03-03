@@ -5,10 +5,11 @@ import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import CopySvg from '../assets/copy.svg';
-import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getLimitMemberMint, getBalanceLoong, getNftIds } from "../utils/web3";
+import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getLimitMemberMint, getBalanceLoong, getOwnerOfLoong } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 import { chain } from '@/common/config';
+import { SearchName } from '@/constant';
 
 const ConnectBtn = styled.button`
     background: #ebe0cc;
@@ -150,7 +151,7 @@ export default function ConnectButton() {
     const [inviteCode, setInviteCode] = useState('')
     const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
     const [myTokens, setMyTokens] = useState({ babyLoong: '0', greatLoong: '0' })
-    const [myNTFs, setMyNTFs] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [myNTFs, setMyNTFs] = useState({ babyLoong: '0', greatLoong: '0' })
 
     const origin =
         typeof window !== 'undefined' && window.location.origin
@@ -201,22 +202,25 @@ export default function ConnectButton() {
     }
 
     const tokensInit = async () => {
-        const [greatLoong, babyLoong] = await Promise.all([
-            getInviteRewards(walletProvider, true),
-            getInviteRewards(walletProvider, false)
-        ]);
-        setTokens({ greatLoong, babyLoong })
+        const greateAmount = await getInviteRewards(walletProvider, true)
+        const babyAmount = await getInviteRewards(walletProvider, false)
+        setTokens({ greatLoong: greateAmount, babyLoong: babyAmount })
     }
 
     const assetsInit = async () => {
-        const [greatLoongNFTRemain, babyLoongNFTRemain, greatLoongTokensRemain, babyLoongTokensRemain] = await Promise.all([
-            getLimitMemberMint(walletProvider, true),
-            getLimitMemberMint(walletProvider, false),
+        const [
+            greatLoongTokensRemain, 
+            babyLoongTokensRemain,
+            greatLoongNFTRemain, 
+            babyLoongNFTRemain, 
+        ] = await Promise.all([
             getBalanceLoong(walletProvider, true),
             getBalanceLoong(walletProvider, false),
+            getOwnerOfLoong(walletProvider, true),
+            getOwnerOfLoong(walletProvider, false),
         ]);
-        setMyNTFs({ greatLoong: greatLoongNFTRemain, babyLoong: babyLoongNFTRemain })
         setMyTokens({ greatLoong: greatLoongTokensRemain, babyLoong: babyLoongTokensRemain })
+        setMyNTFs({ greatLoong: greatLoongNFTRemain, babyLoong: babyLoongNFTRemain })
     }
 
     const onInvite = () => {
@@ -288,7 +292,7 @@ export default function ConnectButton() {
         </>
     );
 
-    const inviteCodeUrl = inviteCode ? `${origin}/mint/great?inviteCode=${inviteCode}` : "";
+    const inviteCodeUrl = inviteCode ? `${origin}/mint?${SearchName.InviteCode}=${inviteCode}` : "";
 
     return address ? (
         <>
