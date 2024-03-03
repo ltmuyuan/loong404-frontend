@@ -317,10 +317,10 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     // const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
-        const canOpen = Boolean(searchParams.get(SearchName.InviteCode));
-        if (pathname === '/mint') {
-            setIsModalOpenImport(canOpen);
-        }
+        // const canOpen = Boolean(searchParams.get(SearchName.InviteCode));
+        // if (pathname === '/mint') {
+        //     setIsModalOpenImport(canOpen);
+        // }
         setInviteCode(searchParams.get(SearchName.InviteCode) || '');
     }, [searchParams, pathname])
 
@@ -368,16 +368,16 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
 
     const normalMint = async (showModal: boolean) => {
         // show invite code modal
-        if (showModal) {
-            if (inviteCode) {
-                setIsModalOpenImport(true)
-                return;
-            }
-        }
+        // if (showModal) {
+        //     if (inviteCode) {
+        //         setIsModalOpenImport(true)
+        //         return;
+        //     }
+        // }
         store.dispatch(saveLoading(true))
         try {
             await mint(walletProvider, !isBaby, count, price, inviteCode)
-            setIsModalOpenImport(false)
+            // setIsModalOpenImport(false)
             setRefresh(refresh + 1)
             store.dispatch(saveLoading(false))
             message.success('Mint success')

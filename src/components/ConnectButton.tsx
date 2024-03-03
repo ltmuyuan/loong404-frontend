@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import CopySvg from '../assets/copy.svg';
-import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getBalanceLoong, getOwnerOfLoong, getNftIds } from "../utils/web3";
+import { generateInviteCode, getInviteCode, getInviteRewards, claimRewards, getBalanceLoong, getOwnerOfLoong, getNftIds, getClaimAmount } from "../utils/web3";
 import store from "../store/index.js";
 import { saveLoading } from "../store/reducer.js";
 import { chain } from '@/common/config';
@@ -152,6 +152,7 @@ export default function ConnectButton() {
     const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
     const [myTokens, setMyTokens] = useState({ babyLoong: '0', greatLoong: '0' })
     const [myNTFs, setMyNTFs] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [claimAmount, setClaimAmount] = useState({ babyLoong: 0, greatLoong: 0 })
 
     const origin =
         typeof window !== 'undefined' && window.location.origin
@@ -205,6 +206,9 @@ export default function ConnectButton() {
         const greateAmount = await getInviteRewards(walletProvider, true)
         const babyAmount = await getInviteRewards(walletProvider, false)
         setTokens({ greatLoong: greateAmount, babyLoong: babyAmount })
+        const greatClaimAmount = await getClaimAmount(walletProvider, true)
+        const babyClaimAmount = await getClaimAmount(walletProvider, false)
+        setClaimAmount({ greatLoong: greatClaimAmount, babyLoong: babyClaimAmount })
     }
 
     const assetsInit = async () => {
@@ -313,9 +317,9 @@ export default function ConnectButton() {
             <Modal isOpen={isModalOpenReward} onClose={() => setIsModalOpenReward(false)} title="Claim your reward">
                 <RewardBox>
                     <div className="des">Earn rewards through various activities like inviting friends to mint NFTs</div>
-                    <div className="rewardTitle">Rewards available:</div>
-                    <div className="tokens"><strong>{tokens.greatLoong}</strong>Great Loong Tokens</div>
-                    <div className="tokens"><strong>{tokens.babyLoong}</strong>Baby Loong Tokens</div>
+                    <div className="rewardTitle">Rewards available(Unlocked/Reward):</div>
+                    <div className="tokens"><strong>{claimAmount.greatLoong}/{tokens.greatLoong}</strong>Great Loong Tokens</div>
+                    <div className="tokens"><strong>{claimAmount.babyLoong}/{tokens.babyLoong}</strong>Baby Loong Tokens</div>
                 </RewardBox>
                 <div style={{ display: "flex", justifyContent: "center", marginTop: "40px" }}>
                     <Button style={{ margin: "0 auto", width: '300px', height: "60px" }} onClick={onClaim}>Claim</Button>

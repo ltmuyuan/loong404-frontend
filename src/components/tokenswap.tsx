@@ -283,7 +283,7 @@ const TokenSwap = () => {
                         />
                     </div>
                 </div>
-                <Btn onClick={onBtnClick} disabled={!!commission}>{ !address ? "Connect Wallet" : commission ? <>Swap<span className="tips">(fee rate: {commission * 100}%)</span></> : "Swap" }</Btn>
+                <Btn onClick={onBtnClick}>{ !address ? "Connect Wallet" : commission ? <>Swap<span className="tips">(fee rate: {commission * 100}%)</span></> : "Swap" }</Btn>
             </div>
         </Box>
     );
