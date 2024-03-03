@@ -11,7 +11,7 @@ import { useWeb3Modal, useWeb3ModalAccount } from '@web3modal/ethers/react'
 import { useWeb3ModalProvider } from "@web3modal/ethers/react";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react";
 import Loading from "@/components/loading";
 import { useSelector } from "react-redux";
@@ -313,15 +313,20 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     const [isModalOpenImport, setIsModalOpenImport] = useState(false);
     const [inviteCode, setInviteCode] = useState('');
     const normalMintRemain = total - minted;
+    const pathname = usePathname();
     // const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
-        setIsModalOpenImport(Boolean(searchParams.get(SearchName.InviteCode)));
+        const canOpen = Boolean(searchParams.get(SearchName.InviteCode));
+        if (pathname === '/mint') {
+            setIsModalOpenImport(canOpen);
+        }
         setInviteCode(searchParams.get(SearchName.InviteCode) || '');
-    }, [searchParams])
+    }, [searchParams, pathname])
 
     const toGo = (url: string) => {
-        navigate(url)
+        const code = searchParams.get(SearchName.InviteCode);
+        navigate(code ? `${url}?${SearchName.InviteCode}=${code}` : url)
     }
 
     const onCountChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
