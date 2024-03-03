@@ -24,6 +24,7 @@ import Button from "@/components/ui/Button";
 import { mint, freeMint as freeMintWeb3 } from "@/utils/web3";
 import { addCommasToNumber, getInitMintInfo, getPercent } from "./utils";
 import Decimal from 'decimal.js';
+import { SearchName } from "@/constant";
 
 // #region Css
 const Layout = styled.div`
@@ -315,8 +316,8 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
     // const singleMintMax = limitMemberMint > normalMintRemain ? normalMintRemain : limitMemberMint
 
     useEffect(() => {
-        setIsModalOpenImport(Boolean(searchParams.get('inviteCode')));
-        setInviteCode(searchParams.get('inviteCode') || '');
+        setIsModalOpenImport(Boolean(searchParams.get(SearchName.InviteCode));
+        setInviteCode(searchParams.get(SearchName.InviteCode) || '');
     }, [searchParams])
 
     const toGo = (url: string) => {
@@ -402,11 +403,12 @@ export function MintLayout({ isBaby }: { isBaby: boolean }) {
         if (address) {
             getInitMintInfo(walletProvider, !isBaby)
                 .then(res => {
+                    debugger;
                     setMinted(res.minted)
                     setPrice(res.price)
                     setMintType(res.isFree ? MINT_TYPE_FREE : MINT_TYPE_NORMAL)
-                    setLimitMint(singleMintMax - res.limitMint)
-                    setCount(singleMintMax - res.limitMint);
+                    setLimitMint(singleMintMax - Number(res.ownNum))
+                    setCount(singleMintMax - Number(res.ownNum));
                 }).catch(e => {
                     setMintType(MINT_TYPE_NORMAL)
                 })
