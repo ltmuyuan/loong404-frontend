@@ -149,10 +149,10 @@ export default function ConnectButton() {
     const [isModalOpenReward, setIsModalOpenReward] = useState(false)
     const [isModalOpenAssets, setIsModalOpenAssets] = useState(false)
     const [inviteCode, setInviteCode] = useState('')
-    const [tokens, setTokens] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [tokens, setTokens] = useState({ babyLoong: '0.0', greatLoong: '0.0' })
     const [myTokens, setMyTokens] = useState({ babyLoong: '0', greatLoong: '0' })
     const [myNTFs, setMyNTFs] = useState({ babyLoong: 0, greatLoong: 0 })
-    const [claimAmount, setClaimAmount] = useState({ babyLoong: 0, greatLoong: 0 })
+    const [claimAmount, setClaimAmount] = useState({ babyLoong: '0.0', greatLoong: '0.0' })
 
     const origin =
         typeof window !== 'undefined' && window.location.origin
@@ -203,9 +203,9 @@ export default function ConnectButton() {
     }
 
     const tokensInit = async () => {
-        const greateAmount = await getInviteRewards(walletProvider, true)
+        const greatAmount = await getInviteRewards(walletProvider, true)
         const babyAmount = await getInviteRewards(walletProvider, false)
-        setTokens({ greatLoong: greateAmount, babyLoong: babyAmount })
+        setTokens({ greatLoong: greatAmount, babyLoong: babyAmount })
         const greatClaimAmount = await getClaimAmount(walletProvider, true)
         const babyClaimAmount = await getClaimAmount(walletProvider, false)
         setClaimAmount({ greatLoong: greatClaimAmount, babyLoong: babyClaimAmount })
@@ -245,13 +245,13 @@ export default function ConnectButton() {
     const onClaim = async () => {
         store.dispatch(saveLoading(true))
         try {
-            if (tokens.greatLoong > 0) {
+            if (Number(tokens.greatLoong) > 0) {
                 await claimRewards(walletProvider, true)
             }
-            if (tokens.babyLoong > 0) {
+            if (Number(tokens.babyLoong) > 0) {
                 await claimRewards(walletProvider, false)
             }
-            if (tokens.greatLoong > 0 || tokens.babyLoong > 0) {
+            if (Number(tokens.greatLoong) > 0 || Number(tokens.babyLoong) > 0) {
                 message.success('Claim successfully!')
                 setIsModalOpenReward(false)
                 tokensInit()
