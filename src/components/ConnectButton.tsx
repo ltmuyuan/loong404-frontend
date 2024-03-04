@@ -305,7 +305,7 @@ export default function ConnectButton() {
             </Popover>
             <Modal isOpen={isModalOpenInvite} onClose={() => setIsModalOpenInvite(false)} title="Invite friends">
                 <div>Invite your friends to join our community with a custom referral code</div>
-                <InviteFriendsRow onClick={() => onCopy(inviteCode)}>
+                <InviteFriendsRow onClick={() => onCopy(inviteCodeUrl)}>
                     <div>Invite Code:</div>
                     <div className="code">{inviteCodeUrl}</div>
                     <img src={CopySvg.src} alt="copy" title="copy" />

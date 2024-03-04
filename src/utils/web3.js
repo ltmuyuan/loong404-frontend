@@ -208,7 +208,8 @@ export const getInviteRewards = async (walletProvider, isGreateL) => {
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
     const num = await contract.getInviteRewards(signer.getAddress())
-    return num.toString()
+    const numReal = ethers.formatEther(num)
+    return numReal.toString()
 }
 
 /**
@@ -222,7 +223,8 @@ export const getClaimAmount = async (walletProvider, isGreateL) => {
     const signer = await ethersProvider.getSigner()
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
     const num = await contract.getClaimAmount(signer.getAddress())
-    return num.toString()
+    const numReal = ethers.formatEther(num)
+    return numReal.toString()
 }
 
 /**
