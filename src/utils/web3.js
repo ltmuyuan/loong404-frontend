@@ -224,7 +224,6 @@ export const getClaimAmount = async (walletProvider, isGreateL) => {
     const contract = new ethers.Contract(isGreateL ? greatLMintAddr : babyLMintAddr, MintABI.abi, signer)
     const num = await contract.getClaimAmount(signer.getAddress())
     const numReal = ethers.formatEther(num)
-    debugger;
     return numReal.toString()
 }
 
