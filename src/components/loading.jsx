@@ -9,7 +9,7 @@ const Box = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 199;
+    z-index: 1999;
     top: 0;
     left: 0;
 `
