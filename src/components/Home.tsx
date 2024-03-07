@@ -204,7 +204,7 @@ export function Home() {
                         </BtnRht>
                     </RhtInner>
                 </RhtBox>
-                {/* <RhtBox>
+                <RhtBox>
                     <RhtInner>
                         <div className="lft">
                             <div className="top">Chat with Me</div>
@@ -213,7 +213,7 @@ export function Home() {
                             Start
                         </BtnRht>
                     </RhtInner>
-                </RhtBox> */}
+                </RhtBox>
             </FloatBox>
         </InnerBox>
         {/* Swap */}
