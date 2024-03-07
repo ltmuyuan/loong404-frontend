@@ -1,4 +1,6 @@
-import {AIStream} from "ai";
+import { AIStream } from "ai";
+
+const API_KEY = 'sk-RnhR7ICa4qLkfARUF9xfjI9ENzoMtDzq3';
 
 // 自定义解析器实现
 const customParser = (data: string) => {
@@ -44,7 +46,7 @@ export async function POST(request: Request) {
       "Content-Type": "application/json",
       "x-requested-with": "XMLHttpRequest",
       Accept: "application/json",
-      Authorization: "Bearer sk-RnhR7ICa4qLkfARUF9xfjI9ENzoMtDzq3",
+      Authorization: `Bearer ${API_KEY}`,
     },
   });
 
