@@ -8,6 +8,8 @@ import { ChatMessage } from "@ant-design/pro-chat/es/types/message";
 import dynamic from "next/dynamic"; // 生成 ID
 import RisingBg from "@/assets/rising-bg.jpg";
 import { Header } from "./Header";
+import { useWeb3ModalAccount } from "@web3modal/ethers/react";
+import { IUsage } from "@/types";
 
 const ProChat = dynamic(() => import("./ProChat"), { ssr: false });
 
@@ -31,6 +33,9 @@ export function Chat() {
   const router = useRouter();
 
   const [chats, setChats] = useState<ChatMessage<any>[]>([]);
+  const { address } = useWeb3ModalAccount();
+  const [usageCount, setUsageCount] = useState<number>(0);
+  const [isFirstChat, setIsFirstChat] = useState<boolean>(true);
 
   const navigateDebounced = useCallback(
     debounce((url) => {
@@ -38,6 +43,35 @@ export function Chat() {
     }, 1000),
     [],
   ); // 1000ms的防抖时间
+  
+  const getUsage = async (address: string, month: string) => {
+    const response = await fetch(`/chat/api/usage?address=${address}&month=${month}`, {
+      method: "GET",
+    });
+    const result: IUsage = await response.json();
+    setUsageCount(result?.count || 0);
+  }
+
+  const addUsageCount = async (address: string, month: string) => {
+    const response = await fetch(`/chat/api/usage`, {
+      method: "POST",
+      body: JSON.stringify({
+        address,
+        month,
+      }),
+    });
+    const result: IUsage = await response.json();
+    setUsageCount(result?.count || 0);
+  }
+
+  useEffect(() => {
+    if (!address) {
+      return;
+    }
+    const now = new Date();
+    const month = `${now.getFullYear()}-${now.getMonth() + 1}`;
+    getUsage(address, month);
+  }, [address])
 
   return (
     <div
@@ -96,6 +130,12 @@ export function Chat() {
               userId: userId,
             }),
           });
+
+          // 第一次对话后，把轮数加1
+          if (isFirstChat && address) {
+            await addUsageCount(address, `${new Date().getFullYear()}-${new Date().getMonth() + 1}`);
+            setIsFirstChat(false);
+          }
           return response;
         }}
         chatItemRenderConfig={{
