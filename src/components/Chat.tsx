@@ -12,8 +12,8 @@ import { useWeb3ModalAccount, useWeb3ModalProvider } from "@web3modal/ethers/rea
 import { IUsage } from "@/types";
 import { getNftIds } from "@/utils/web3";
 import ProChat from "./ProChat";
-import { Input } from "antd";
-import { jsx } from "react/jsx-runtime";
+
+interface UsageResult { msg: string; code: number; data: IUsage }
 
 // 生成 ID
 const userId = nanoid();
@@ -57,9 +57,13 @@ export function Chat() {
     const response = await fetch(`/chat/api/usage?address=${address}&month=${month}`, {
       method: "GET",
     });
-    const result: { data: IUsage } = await response.json();
+    const result: UsageResult = await response.json();
 
-    setUsageCount(result?.data?.count || 0);
+    if (result?.data?.count === undefined) {
+      setUsageCount(result.data.count);
+    } else {
+      console.error(result.msg);
+    }
   }
 
   const addUsageCount = async (address: string, month: string) => {
@@ -70,8 +74,12 @@ export function Chat() {
         month,
       }),
     });
-    const result: IUsage = await response.json();
-    setUsageCount(result?.count || 0);
+    const result: UsageResult = await response.json();
+    if (result?.data?.count === undefined) {
+      setUsageCount(result.data.count);
+    } else {
+      console.error(result.msg);
+    }
   }
 
   const assetsInit = async () => {
